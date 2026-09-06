@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">CryptoTrack</string>
+    <string name="back_cd">Back</string>
+    <string name="settings_cd">Settings</string>
+    <string name="search_hint">Search Assets</string>
+    <string name="search_empty">No results found</string>
+</resources>
