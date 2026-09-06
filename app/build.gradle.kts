@@ -24,6 +24,7 @@ dependencies {
     implementation(project(":feature:coin-details"))
     implementation(project(":feature:favorites"))
     implementation(project(":feature:search"))
+    implementation(project(":feature:portfolio"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.activity.compose)

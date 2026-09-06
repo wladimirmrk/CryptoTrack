@@ -79,6 +79,7 @@
 **Задачи:** Use cases: `ObservePortfolioUseCase` (holdings×цены → агрегаты: Total Balance, 24h PNL, аллокация — unit-тесты расчётов!), VM, экран: Total Balance card, Allocation (донат — Canvas), Your Assets (строки с количеством/USD/24h%), Empty Portfolio, тап по активу → Edit Asset / Details; тесты.
 **Коммиты:** `feat(portfolio): add portfolio calculations` → `feat(portfolio): add overview screen` → `feat(portfolio): add empty state` → `test(portfolio): add calculation tests`.
 **DoD:** агрегаты считаются корректно (тесты на округление/нулевой PNL); пустой портфель → Empty-макет.
+**Ограничение v1:** коины вне кэша маркет-листа (top-50) в портфель не попадают — агрегаты считаются только по закэшированным коинам.
 **Проверка:** арифметика PNL против ручных примеров.
 
 ## Phase 8 — Feature: Asset Entry → `phase/8-assetentry`

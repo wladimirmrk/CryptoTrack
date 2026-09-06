@@ -19,17 +19,13 @@ import com.cryptotrack.feature.coindetails.domain.RefreshCoinDataUseCase
 import com.cryptotrack.feature.coindetails.presentation.CoinDetailsViewModel
 import com.google.common.truth.Truth.assertThat
 import java.math.BigDecimal
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.advanceUntilIdle
-import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
-import kotlinx.coroutines.test.setMain
-import org.junit.After
-import org.junit.Before
+import kotlinx.coroutines.withTimeout
 import org.junit.Test
 
 private class FakeMarketRepository : MarketRepository {
@@ -99,15 +95,10 @@ private fun details() = CoinDetails(
 
 class CoinDetailsViewModelTest {
 
-    @Before
-    fun setUp() {
-        Dispatchers.setMain(StandardTestDispatcher())
-    }
-
-    @After
-    fun tearDown() {
-        Dispatchers.resetMain()
-    }
+    // No Dispatchers.setMain here: runTest already substitutes Main with its own
+    // scheduler. A separate StandardTestDispatcher from setMain is never advanced
+    // by runTest, so viewModelScope launches (range switch) would never run and
+    // the init refresh would always win the ordering (see market/portfolio tests).
 
     private val repository = FakeMarketRepository()
     private val favorites = FakeFavoritesRepository()
@@ -147,7 +138,14 @@ class CoinDetailsViewModelTest {
         advanceUntilIdle()
 
         viewModel.onRangeSelect(ChartRange.YEAR_1)
-        advanceUntilIdle()
+        // viewModelScope runs on Dispatchers.Default in JVM tests (no Main looper),
+        // so advanceUntilIdle cannot order it against this thread: wait for the
+        // range refresh to land in the repository before asserting.
+        withTimeout(5_000) {
+            while (repository.lastHistoryRange != ChartRange.YEAR_1) {
+                delay(10)
+            }
+        }
 
         assertThat(repository.lastHistoryRange).isEqualTo(ChartRange.YEAR_1)
         assertThat(repository.historyCalls).isAtLeast(2)

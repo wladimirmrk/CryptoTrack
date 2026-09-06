@@ -32,6 +32,10 @@ internal object NetworkModule {
 
     @Provides
     @Singleton
+    fun provideApiKey(): String = BuildConfig.COINGECKO_API_KEY
+
+    @Provides
+    @Singleton
     fun provideJson(): Json =
         Json {
             ignoreUnknownKeys = true

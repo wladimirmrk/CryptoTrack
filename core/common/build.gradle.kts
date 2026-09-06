@@ -1,5 +1,6 @@
 plugins {
     alias(libs.plugins.cryptotrack.android.library)
+    alias(libs.plugins.cryptotrack.android.hilt)
 }
 
 android {
