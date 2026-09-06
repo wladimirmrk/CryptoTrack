@@ -22,6 +22,7 @@ import com.cryptotrack.core.navigation.MarketRoute
 import com.cryptotrack.core.navigation.PortfolioRoute
 import com.cryptotrack.core.navigation.SearchRoute
 import com.cryptotrack.core.navigation.SettingsRoute
+import com.cryptotrack.core.navigation.SplashRoute
 
 /**
  * Единый NavHost приложения (ADR-004). Топ-уровень — Market/Portfolio/Favorites (bottom bar);
@@ -60,9 +61,18 @@ fun CryptoTrackNavHost(
     ) { padding ->
         NavHost(
             navController = navController,
-            startDestination = MarketRoute,
+            startDestination = SplashRoute,
             modifier = Modifier.padding(padding),
         ) {
+            composable<SplashRoute> {
+                SplashScreen(
+                    onDone = {
+                        navController.navigate(MarketRoute) {
+                            popUpTo<SplashRoute> { inclusive = true }
+                        }
+                    },
+                )
+            }
             composable<MarketRoute> {
                 PlaceholderScreen(title = "Market", phaseHint = "Phase 4")
             }
