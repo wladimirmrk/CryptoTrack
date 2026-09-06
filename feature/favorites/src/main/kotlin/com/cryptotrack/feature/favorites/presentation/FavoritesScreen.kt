@@ -73,7 +73,9 @@ fun FavoritesScreen(
                         name = coin.name,
                         symbol = coin.symbol,
                         priceText = com.cryptotrack.core.common.format.MoneyFormat.usd(coin.currentPrice),
-                        changeText = com.cryptotrack.core.common.format.MoneyFormat.percent(coin.priceChangePercentage24h),
+                        changeText = com.cryptotrack.core.common.format.MoneyFormat.percent(
+                            coin.priceChangePercentage24h,
+                        ),
                         isUp = coin.priceChangePercentage24h >= 0,
                         imageUrl = coin.imageUrl,
                         favoriteIcon = Icons.Filled.Star,

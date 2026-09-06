@@ -41,7 +41,11 @@ private class FakeMarketRepository : MarketRepository {
     override fun observeCoinDetails(coinId: String, currency: String) = throw NotImplementedError()
     override suspend fun refreshCoinDetails(coinId: String, currency: String) = throw NotImplementedError()
     override fun observePriceHistory(coinId: String, currency: String, range: ChartRange) = throw NotImplementedError()
-    override suspend fun refreshPriceHistory(coinId: String, currency: String, range: ChartRange) = throw NotImplementedError()
+    override suspend fun refreshPriceHistory(
+        coinId: String,
+        currency: String,
+        range: ChartRange,
+    ) = throw NotImplementedError()
 
     override suspend fun searchCoins(query: String, currency: String): Result<List<Coin>> {
         lastQuery = query
