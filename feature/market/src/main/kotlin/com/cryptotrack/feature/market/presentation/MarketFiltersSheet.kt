@@ -74,8 +74,16 @@ fun MarketFiltersSheet(
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.padding(top = 16.dp),
             )
-            OptionRow(label = SortOrder.DESCENDING.label, selected = order == SortOrder.DESCENDING, onClick = { order = SortOrder.DESCENDING })
-            OptionRow(label = SortOrder.ASCENDING.label, selected = order == SortOrder.ASCENDING, onClick = { order = SortOrder.ASCENDING })
+            OptionRow(
+                label = SortOrder.DESCENDING.label,
+                selected = order == SortOrder.DESCENDING,
+                onClick = { order = SortOrder.DESCENDING },
+            )
+            OptionRow(
+                label = SortOrder.ASCENDING.label,
+                selected = order == SortOrder.ASCENDING,
+                onClick = { order = SortOrder.ASCENDING },
+            )
 
             Row(
                 modifier = Modifier

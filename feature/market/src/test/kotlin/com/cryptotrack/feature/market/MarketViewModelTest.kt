@@ -126,7 +126,10 @@ class MarketViewModelTest {
         advanceUntilIdle()
 
         viewModel.onApplyFilter(
-            MarketFilter(sortBy = MarketSortBy.PRICE, order = com.cryptotrack.feature.market.domain.SortOrder.ASCENDING),
+            MarketFilter(
+                sortBy = MarketSortBy.PRICE,
+                order = com.cryptotrack.feature.market.domain.SortOrder.ASCENDING,
+            ),
         )
         advanceUntilIdle()
 
