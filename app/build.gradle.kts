@@ -20,6 +20,7 @@ dependencies {
     implementation(project(":core:data"))
     implementation(project(":core:designsystem"))
     implementation(project(":core:navigation"))
+    implementation(project(":feature:market"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.activity.compose)

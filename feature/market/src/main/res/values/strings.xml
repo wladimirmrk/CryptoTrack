@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">CryptoTrack</string>
+    <string name="market_title">Market Overview</string>
+    <string name="market_subtitle">Top assets by market cap</string>
+    <string name="market_empty">No assets found</string>
+    <string name="search_cd">Search assets</string>
+    <string name="filters_cd">Filters</string>
+    <string name="sort_cd">Sort</string>
+    <string name="sort_by_label">Sort by: %1$s</string>
+    <string name="favorite_cd">Favorite</string>
+</resources>
