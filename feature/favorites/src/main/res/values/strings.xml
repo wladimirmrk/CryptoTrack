@@ -1,0 +1,7 @@
+<resources>
+    <string name="favorites_title">Favorites</string>
+    <string name="favorites_empty_title">No favorite cryptocurrencies yet</string>
+    <string name="favorites_empty_message">Keep track of your preferred assets. Tap the star icon on any coin to add it to your favorites for quick access and monitoring.</string>
+    <string name="favorites_browse">Browse Market</string>
+    <string name="search_cd">Search assets</string>
+</resources>
