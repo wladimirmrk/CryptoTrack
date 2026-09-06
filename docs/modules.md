@@ -9,13 +9,12 @@
 |---|---|---|---|
 | `:app` | Единственная Activity, NavHost, bottom bar, Splash, сборка DI-графа, Konsist-тесты архитектуры | все `feature:*`, `core:designsystem`, `core:navigation`, `core:data`, `core:model` | 1 |
 | `build-logic` (included build) | Convention plugins: общая конфигурация Android/Kotlin/Compose/Hilt/Room, `crypto.feature` | — (Gradle) | 1 |
-| `:core:common` | `Result<T, AppError>`, `DispatchersProvider`, `TimeProvider`, `Logger`, `ConnectivityMonitor` (интерфейс), форматтеры денег/процентов | — | 2 |
+| `:core:common` | `Result<T, AppError>`, `DispatchersProvider`, `TimeProvider`, `Logger`, `ConnectivityMonitor` (интерфейсы), форматтеры денег/процентов | — | 2 |
 | `:core:model` | Кросс-фичевые доменные модели: `Coin`, `CoinDetails`, `PricePoint`, `Holding`, `Favorite`, `AppSettings`, `Currency`, `MarketFilter` | — | 2 |
-| `:core:network` | OkHttp/Retrofit, `CoinGeckoApi`, DTO + мапперы в model, маппинг ошибок, rate limit, health-check, `MarketRemoteDataSource` impl | `core:common`, `core:model` | 2 |
-| `:core:database` | Room: holdings, favorites, market cache (entities/DAOs), timestamp кэша | `core:common` | 2 |
+| `:core:network` | OkHttp/Retrofit, `CoinGeckoApi`, DTO + мапперы в model, маппинг ошибок (`safeApiCall`), `AuthInterceptor`, health-check, `MarketRemoteDataSource` (интерфейс) + CoinGecko impl | `core:common`, `core:model` | 2 |
 | `:core:datastore` | DataStore Preferences: currency, dark mode, refresh interval | `core:common` | 2 |
-| `:core:data` | Репозитории (интерфейс+impl) и offline-first оркестрация: `MarketRepository`, `FavoritesRepository`, `PortfolioRepository`, `SettingsRepository`, `MarketRemoteDataSource` (интерфейс) | `core:network`, `core:database`, `core:datastore`, `core:model`, `core:common` | 2 |
-| `:core:designsystem` | Тема и токены «Apex Finance», общие компоненты (CoinListItem, Sparkline, Skeleton, EmptyState, ErrorState, OfflineBanner, кнопки, шиты…) | `core:common` | 2 |
+| `:core:data` | Репозитории (интерфейс+impl) и offline-first оркестрация: `MarketRepository`, `FavoritesRepository`, `PortfolioRepository`, `SettingsRepository`; Room-кэш (entities/DAOs/Database) в пакете `database/` (ADR-016) | `core:network`, `core:datastore`, `core:model`, `core:common` | 2 |
+| `:core:designsystem` | Тема/токены «Apex Finance» (light-палитра из design.md + generated dark, Inter + JetBrains Mono variable), компоненты: ApexButton, ApexCard, CoinListItem, CoinIcon, PriceText/ChangeText/ChangeBadge, StatTile, Sparkline, Skeleton, EmptyState, ErrorState, OfflineBanner, ApexSearchBar, SectionHeader | `core:common` | 2 |
 | `:core:navigation` | Type-safe маршруты (`@Serializable`), контракты `NavGraphBuilder.xxxGraph` | `core:model` | 2 |
 | `:feature:market` | Market Home, фильтры (шит), состояния loading/error/empty/offline | designsystem, navigation, model, common, data | 4 |
 | `:feature:coin-details` | Детали коина: график (Vico), таймфреймы, Market Stats, About | те же | 5 |

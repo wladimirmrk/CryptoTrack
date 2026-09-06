@@ -1,0 +1,9 @@
+<resources>
+    <!-- Общие тексты состояний (макеты Error State / Offline State) -->
+    <string name="error_title">Something went wrong</string>
+    <string name="error_message">We\'re unable to connect to the market servers. Please check your connection and try again.</string>
+    <string name="error_retry">RETRY CONNECTION</string>
+    <string name="error_back_home">BACK TO HOME</string>
+    <string name="offline_banner">No Internet Connection. Showing cached data.</string>
+    <string name="offline_last_updated">Last updated: %1$s</string>
+</resources>
