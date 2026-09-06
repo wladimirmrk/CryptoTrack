@@ -26,3 +26,4 @@ rootProject.name = "CryptoTrack"
 include(":app")
 include(":core:common")
 include(":core:model")
+include(":core:network")
