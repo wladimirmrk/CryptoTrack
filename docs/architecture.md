@@ -41,9 +41,9 @@ Remote Data Source      Local Data Source
 ```
 app ──► все feature:* и core:*
 feature:* ──► core:designsystem, core:navigation, core:model, core:common, core:data
-core:data ──► core:network, core:database, core:datastore, core:model, core:common
+core:data ──► core:network, core:datastore, core:model, core:common
 core:network ──► core:model, core:common
-core:database ──► core:common          core:datastore ──► core:common
+core:datastore ──► core:common
 core:designsystem ──► core:common      core:navigation ──► core:model
 ```
 
