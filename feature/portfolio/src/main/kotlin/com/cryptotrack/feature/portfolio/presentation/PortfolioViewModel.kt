@@ -77,7 +77,9 @@ class PortfolioViewModel @Inject constructor(
                     imageUrl = position.coin.imageUrl,
                     amountText = "${position.amount.toPlainString()} ${position.coin.symbol}",
                     valueText = com.cryptotrack.core.common.format.MoneyFormat.usd(position.valueUsd),
-                    changeText = com.cryptotrack.core.common.format.MoneyFormat.percent(position.coin.priceChangePercentage24h),
+                    changeText = com.cryptotrack.core.common.format.MoneyFormat.percent(
+                        position.coin.priceChangePercentage24h,
+                    ),
                     isUp = position.coin.priceChangePercentage24h >= 0,
                 )
             },
