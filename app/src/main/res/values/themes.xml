@@ -1,0 +1,6 @@
+<resources>
+    <!-- Временная платформенная тема; заменяется на тему дизайн-системы в Phase 2/3. -->
+    <style name="Theme.CryptoTrack" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:statusBarColor">@android:color/transparent</item>
+    </style>
+</resources>
