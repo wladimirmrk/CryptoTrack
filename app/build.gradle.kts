@@ -21,6 +21,7 @@ dependencies {
     implementation(project(":core:designsystem"))
     implementation(project(":core:navigation"))
     implementation(project(":feature:market"))
+    implementation(project(":feature:coin-details"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.activity.compose)
