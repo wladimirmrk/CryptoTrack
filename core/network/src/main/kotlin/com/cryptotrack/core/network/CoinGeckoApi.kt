@@ -13,7 +13,6 @@ import retrofit2.http.Query
  * CoinGecko API v3 (ADR-006). Замена провайдера = новая реализация MarketRemoteDataSource.
  */
 interface CoinGeckoApi {
-
     @GET("coins/markets")
     suspend fun getMarkets(
         @Query("vs_currency") currency: String,
@@ -42,7 +41,9 @@ interface CoinGeckoApi {
     ): MarketChartDto
 
     @GET("search")
-    suspend fun search(@Query("query") query: String): SearchDto
+    suspend fun search(
+        @Query("query") query: String,
+    ): SearchDto
 
     @GET("ping")
     suspend fun ping(): PingDto

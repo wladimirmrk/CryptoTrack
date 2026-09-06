@@ -10,19 +10,26 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 abstract class PriceHistoryDao {
-
     @Query(
         "SELECT * FROM price_history " +
             "WHERE coinId = :coinId AND currency = :currency AND range = :range " +
             "ORDER BY timestampMillis ASC",
     )
-    abstract fun observe(coinId: String, currency: String, range: String): Flow<List<PriceHistoryEntity>>
+    abstract fun observe(
+        coinId: String,
+        currency: String,
+        range: String,
+    ): Flow<List<PriceHistoryEntity>>
 
     @Query(
         "DELETE FROM price_history " +
             "WHERE coinId = :coinId AND currency = :currency AND range = :range",
     )
-    abstract suspend fun clear(coinId: String, currency: String, range: String)
+    abstract suspend fun clear(
+        coinId: String,
+        currency: String,
+        range: String,
+    )
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract suspend fun insertAll(points: List<PriceHistoryEntity>)

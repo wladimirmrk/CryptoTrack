@@ -18,6 +18,7 @@ internal fun VersionCatalog.library(alias: String) =
 internal fun Project.configureDetekt() {
     extensions.configure<DetektExtension> {
         buildUponDefaultConfig = true
+        autoCorrect = true
         config.setFrom(rootProject.files("config/detekt/detekt.yml"))
     }
 }

@@ -8,12 +8,17 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface CoinDetailsDao {
+    @Query("SELECT * FROM coin_details WHERE coinId = :coinId AND currency = :currency")
+    fun observe(
+        coinId: String,
+        currency: String,
+    ): Flow<CoinDetailsEntity?>
 
     @Query("SELECT * FROM coin_details WHERE coinId = :coinId AND currency = :currency")
-    fun observe(coinId: String, currency: String): Flow<CoinDetailsEntity?>
-
-    @Query("SELECT * FROM coin_details WHERE coinId = :coinId AND currency = :currency")
-    suspend fun get(coinId: String, currency: String): CoinDetailsEntity?
+    suspend fun get(
+        coinId: String,
+        currency: String,
+    ): CoinDetailsEntity?
 
     @Upsert
     suspend fun upsert(details: CoinDetailsEntity)

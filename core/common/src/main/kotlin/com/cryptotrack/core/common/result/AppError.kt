@@ -7,7 +7,9 @@ package com.cryptotrack.core.common.result
 sealed interface AppError {
     data object Network : AppError
 
-    data class Http(val code: Int) : AppError
+    data class Http(
+        val code: Int,
+    ) : AppError
 
     data object RateLimit : AppError
 
@@ -15,5 +17,7 @@ sealed interface AppError {
 
     data object Serialization : AppError
 
-    data class Unknown(val message: String?) : AppError
+    data class Unknown(
+        val message: String?,
+    ) : AppError
 }

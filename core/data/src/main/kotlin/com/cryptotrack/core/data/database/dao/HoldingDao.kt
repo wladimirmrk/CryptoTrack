@@ -8,7 +8,6 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface HoldingDao {
-
     @Query("SELECT * FROM holdings ORDER BY updatedAtMillis DESC")
     fun observeAll(): Flow<List<HoldingEntity>>
 

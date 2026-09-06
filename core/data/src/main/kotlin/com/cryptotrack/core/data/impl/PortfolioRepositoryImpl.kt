@@ -13,20 +13,26 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class PortfolioRepositoryImpl @Inject constructor(
+class PortfolioRepositoryImpl
+@Inject
+constructor(
     database: CryptoTrackDatabase,
     private val timeProvider: TimeProvider,
 ) : PortfolioRepository {
-
     private val holdingDao = database.holdingDao()
 
-    override fun observeHoldings(): Flow<List<Holding>> =
-        holdingDao.observeAll().map { list -> list.map { it.toHolding() } }
+    override fun observeHoldings(): Flow<List<Holding>> = holdingDao.observeAll().map { list ->
+        list.map {
+        it.toHolding()
+    }
+    }
 
-    override fun observeHolding(coinId: String): Flow<Holding?> =
-        holdingDao.observe(coinId).map { it?.toHolding() }
+    override fun observeHolding(coinId: String): Flow<Holding?> = holdingDao.observe(coinId).map { it?.toHolding() }
 
-    override suspend fun saveHolding(coinId: String, amount: BigDecimal) {
+    override suspend fun saveHolding(
+        coinId: String,
+        amount: BigDecimal,
+    ) {
         // Повторное добавление того же коина суммируется (ADR-013).
         val existing = holdingDao.get(coinId)
         val total = existing?.amount?.let { BigDecimal(it).add(amount) } ?: amount
@@ -35,7 +41,10 @@ class PortfolioRepositoryImpl @Inject constructor(
         )
     }
 
-    override suspend fun setHoldingAmount(coinId: String, amount: BigDecimal) {
+    override suspend fun setHoldingAmount(
+        coinId: String,
+        amount: BigDecimal,
+    ) {
         holdingDao.upsert(
             Holding(coinId = coinId, amount = amount, updatedAtMillis = timeProvider.nowMillis()).toEntity(),
         )

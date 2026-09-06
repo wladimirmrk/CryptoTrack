@@ -1,9 +1,9 @@
 package com.cryptotrack.core.data.repository
 
 import com.cryptotrack.core.common.result.Result
+import com.cryptotrack.core.model.ChartRange
 import com.cryptotrack.core.model.Coin
 import com.cryptotrack.core.model.CoinDetails
-import com.cryptotrack.core.model.ChartRange
 import com.cryptotrack.core.model.PricePoint
 import kotlinx.coroutines.flow.Flow
 
@@ -11,7 +11,6 @@ import kotlinx.coroutines.flow.Flow
  * Маркет-данные: offline-first (ADR-005) — UI читает Flow из Room, сеть обновляет кэш.
  */
 interface MarketRepository {
-
     fun observeMarkets(currency: String): Flow<List<Coin>>
 
     suspend fun refreshMarkets(
@@ -22,20 +21,43 @@ interface MarketRepository {
 
     fun observeMarketLastUpdated(currency: String): Flow<Long?>
 
-    fun observeCoin(coinId: String, currency: String): Flow<Coin?>
+    fun observeCoin(
+        coinId: String,
+        currency: String,
+    ): Flow<Coin?>
 
-    suspend fun getCoin(coinId: String, currency: String): Coin?
+    suspend fun getCoin(
+        coinId: String,
+        currency: String,
+    ): Coin?
 
-    fun observeCoinDetails(coinId: String, currency: String): Flow<CoinDetails?>
+    fun observeCoinDetails(
+        coinId: String,
+        currency: String,
+    ): Flow<CoinDetails?>
 
-    suspend fun refreshCoinDetails(coinId: String, currency: String): Result<Unit>
+    suspend fun refreshCoinDetails(
+        coinId: String,
+        currency: String,
+    ): Result<Unit>
 
-    fun observePriceHistory(coinId: String, currency: String, range: ChartRange): Flow<List<PricePoint>>
+    fun observePriceHistory(
+        coinId: String,
+        currency: String,
+        range: ChartRange,
+    ): Flow<List<PricePoint>>
 
-    suspend fun refreshPriceHistory(coinId: String, currency: String, range: ChartRange): Result<Unit>
+    suspend fun refreshPriceHistory(
+        coinId: String,
+        currency: String,
+        range: ChartRange,
+    ): Result<Unit>
 
     /** Поиск по CoinGecko с обогащением ценами из кэша, если коин уже в нём. */
-    suspend fun searchCoins(query: String, currency: String): Result<List<Coin>>
+    suspend fun searchCoins(
+        query: String,
+        currency: String,
+    ): Result<List<Coin>>
 
     suspend fun pingApi(): Result<Long>
 

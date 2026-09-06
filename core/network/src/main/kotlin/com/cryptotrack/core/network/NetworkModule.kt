@@ -19,7 +19,6 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 internal abstract class DataSourceModule {
-
     @Binds
     @Singleton
     abstract fun bindMarketRemoteDataSource(impl: CoinGeckoRemoteDataSource): MarketRemoteDataSource
@@ -28,40 +27,45 @@ internal abstract class DataSourceModule {
 @Module
 @InstallIn(SingletonComponent::class)
 internal object NetworkModule {
-
     private const val BASE_URL = "https://api.coingecko.com/api/v3/"
     private const val TIMEOUT_SECONDS = 20L
 
     @Provides
     @Singleton
-    fun provideJson(): Json = Json {
-        ignoreUnknownKeys = true
-        isLenient = true
-        coerceInputValues = true
-    }
+    fun provideJson(): Json =
+        Json {
+            ignoreUnknownKeys = true
+            isLenient = true
+            coerceInputValues = true
+        }
 
     @Provides
     @Singleton
     fun provideOkHttpClient(authInterceptor: AuthInterceptor): OkHttpClient =
-        OkHttpClient.Builder()
+        OkHttpClient
+            .Builder()
             .connectTimeout(TIMEOUT_SECONDS, TimeUnit.SECONDS)
             .readTimeout(TIMEOUT_SECONDS, TimeUnit.SECONDS)
             .addInterceptor(authInterceptor)
             .addInterceptor(
                 HttpLoggingInterceptor().apply {
-                    level = if (BuildConfig.DEBUG) {
-                        HttpLoggingInterceptor.Level.BASIC
-                    } else {
-                        HttpLoggingInterceptor.Level.NONE
-                    }
+                    level =
+                        if (BuildConfig.DEBUG) {
+                            HttpLoggingInterceptor.Level.BASIC
+                        } else {
+                            HttpLoggingInterceptor.Level.NONE
+                        }
                 },
-            )
-            .build()
+            ).build()
 
     @Provides
     @Singleton
-    fun provideRetrofit(client: OkHttpClient, json: Json): Retrofit =
-        Retrofit.Builder()
+    fun provideRetrofit(
+        client: OkHttpClient,
+        json: Json,
+    ): Retrofit =
+        Retrofit
+            .Builder()
             .baseUrl(BASE_URL)
             .client(client)
             .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))

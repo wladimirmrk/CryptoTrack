@@ -18,10 +18,12 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object DatabaseModule {
-
     @Provides
     @Singleton
-    fun provideDatabase(@ApplicationContext context: Context): CryptoTrackDatabase =
-        Room.databaseBuilder(context, CryptoTrackDatabase::class.java, CryptoTrackDatabase.NAME)
+    fun provideDatabase(
+        @ApplicationContext context: Context,
+    ): CryptoTrackDatabase =
+        Room
+            .databaseBuilder(context, CryptoTrackDatabase::class.java, CryptoTrackDatabase.NAME)
             .build()
 }

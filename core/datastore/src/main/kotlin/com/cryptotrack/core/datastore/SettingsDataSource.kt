@@ -20,24 +20,27 @@ private val Context.settingsStore by preferencesDataStore(name = "cryptotrack_se
  * Настройки пользователя (Preferences-секция макета Settings) в DataStore.
  */
 @Singleton
-class SettingsDataSource @Inject constructor(
+class SettingsDataSource
+@Inject
+constructor(
     @ApplicationContext private val context: Context,
 ) {
-
     private object Keys {
         val CURRENCY = stringPreferencesKey("currency")
         val DARK_MODE = booleanPreferencesKey("dark_mode")
         val REFRESH_INTERVAL = stringPreferencesKey("refresh_interval")
     }
 
-    val settings: Flow<AppSettings> = context.settingsStore.data.map { prefs ->
-        AppSettings(
-            currency = prefs[Keys.CURRENCY]?.toEnum<Currency>() ?: Currency.USD,
-            isDarkMode = prefs[Keys.DARK_MODE] ?: false,
-            refreshInterval = prefs[Keys.REFRESH_INTERVAL]?.toEnum<RefreshInterval>()
-                ?: RefreshInterval.FIFTEEN_SECONDS,
-        )
-    }
+    val settings: Flow<AppSettings> =
+        context.settingsStore.data.map { prefs ->
+            AppSettings(
+                currency = prefs[Keys.CURRENCY]?.toEnum<Currency>() ?: Currency.USD,
+                isDarkMode = prefs[Keys.DARK_MODE] ?: false,
+                refreshInterval =
+                prefs[Keys.REFRESH_INTERVAL]?.toEnum<RefreshInterval>()
+                    ?: RefreshInterval.FIFTEEN_SECONDS,
+            )
+        }
 
     suspend fun setCurrency(currency: Currency) {
         context.settingsStore.edit { it[Keys.CURRENCY] = currency.name }
@@ -51,6 +54,5 @@ class SettingsDataSource @Inject constructor(
         context.settingsStore.edit { it[Keys.REFRESH_INTERVAL] = interval.name }
     }
 
-    private inline fun <reified T : Enum<T>> String.toEnum(): T? =
-        runCatching { enumValueOf<T>(this) }.getOrNull()
+    private inline fun <reified T : Enum<T>> String.toEnum(): T? = runCatching { enumValueOf<T>(this) }.getOrNull()
 }

@@ -2,7 +2,6 @@ package com.cryptotrack.core.data.database.entity
 
 import androidx.room.Entity
 import androidx.room.Index
-import androidx.room.PrimaryKey
 
 /**
  * Кэш маркет-списка, per-валюта (ADR-005: Room — единственный источник для UI).

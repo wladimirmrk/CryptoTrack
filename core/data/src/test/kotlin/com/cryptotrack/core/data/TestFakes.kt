@@ -18,7 +18,9 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.map
 
-internal class FakeTimeProvider(var now: Long = 1_000L) : TimeProvider {
+internal class FakeTimeProvider(
+    var now: Long = 1_000L,
+) : TimeProvider {
     override fun nowMillis(): Long = now
 }
 
@@ -27,8 +29,7 @@ internal class InMemoryHoldingDao : HoldingDao {
 
     override fun observeAll(): Flow<List<HoldingEntity>> = store
 
-    override fun observe(coinId: String): Flow<HoldingEntity?> =
-        store.map { list -> list.find { it.coinId == coinId } }
+    override fun observe(coinId: String): Flow<HoldingEntity?> = store.map { list -> list.find { it.coinId == coinId } }
 
     override suspend fun get(coinId: String): HoldingEntity? = store.value.find { it.coinId == coinId }
 
@@ -63,11 +64,16 @@ internal class InMemoryFavoriteDao : FavoriteDao {
 internal class InMemoryMarketDao : MarketDao {
     val store = MutableStateFlow<List<MarketCoinEntity>>(emptyList())
 
-    override fun observeAll(currency: String): Flow<List<MarketCoinEntity>> =
-        store.map { list -> list.filter { it.currency == currency } }
+    override fun observeAll(currency: String): Flow<List<MarketCoinEntity>> = store.map { list ->
+        list.filter {
+        it.currency == currency
+    }
+    }
 
-    override suspend fun get(coinId: String, currency: String): MarketCoinEntity? =
-        store.value.find { it.coinId == coinId && it.currency == currency }
+    override suspend fun get(
+        coinId: String,
+        currency: String,
+    ): MarketCoinEntity? = store.value.find { it.coinId == coinId && it.currency == currency }
 
     override suspend fun upsertAll(coins: List<MarketCoinEntity>) {
         val merged = store.value.associateBy { it.coinId to it.currency }.toMutableMap()
@@ -79,11 +85,15 @@ internal class InMemoryMarketDao : MarketDao {
 internal class InMemoryCoinDetailsDao : CoinDetailsDao {
     val store = MutableStateFlow<Map<String, CoinDetailsEntity>>(emptyMap())
 
-    override fun observe(coinId: String, currency: String): Flow<CoinDetailsEntity?> =
-        store.map { it["$coinId:$currency"] }
+    override fun observe(
+        coinId: String,
+        currency: String,
+    ): Flow<CoinDetailsEntity?> = store.map { it["$coinId:$currency"] }
 
-    override suspend fun get(coinId: String, currency: String): CoinDetailsEntity? =
-        store.value["$coinId:$currency"]
+    override suspend fun get(
+        coinId: String,
+        currency: String,
+    ): CoinDetailsEntity? = store.value["$coinId:$currency"]
 
     override suspend fun upsert(details: CoinDetailsEntity) {
         store.value = store.value + ("${details.coinId}:${details.currency}" to details)
@@ -93,15 +103,24 @@ internal class InMemoryCoinDetailsDao : CoinDetailsDao {
 internal class InMemoryPriceHistoryDao : PriceHistoryDao() {
     val store = MutableStateFlow<List<PriceHistoryEntity>>(emptyList())
 
-    override fun observe(coinId: String, currency: String, range: String): Flow<List<PriceHistoryEntity>> =
+    override fun observe(
+        coinId: String,
+        currency: String,
+        range: String,
+    ): Flow<List<PriceHistoryEntity>> =
         store.map { list ->
             list.filter { it.coinId == coinId && it.currency == currency && it.range == range }
         }
 
-    override suspend fun clear(coinId: String, currency: String, range: String) {
-        store.value = store.value.filterNot {
-            it.coinId == coinId && it.currency == currency && it.range == range
-        }
+    override suspend fun clear(
+        coinId: String,
+        currency: String,
+        range: String,
+    ) {
+        store.value =
+            store.value.filterNot {
+                it.coinId == coinId && it.currency == currency && it.range == range
+            }
     }
 
     override suspend fun insertAll(points: List<PriceHistoryEntity>) {
@@ -130,7 +149,6 @@ class TestDatabase(
     val priceHistory: PriceHistoryDao = InMemoryPriceHistoryDao(),
     val cacheMeta: CacheMetaDao = InMemoryCacheMetaDao(),
 ) : CryptoTrackDatabase() {
-
     override fun holdingDao(): HoldingDao = holding
 
     override fun favoriteDao(): FavoriteDao = favorite
@@ -145,6 +163,7 @@ class TestDatabase(
 
     override fun clearAllTables() = Unit
 
-    override fun createInvalidationTracker(): androidx.room.InvalidationTracker =
-        throw UnsupportedOperationException("not used in tests")
+    override fun createInvalidationTracker(): androidx.room.InvalidationTracker = throw UnsupportedOperationException(
+        "not used in tests"
+    )
 }

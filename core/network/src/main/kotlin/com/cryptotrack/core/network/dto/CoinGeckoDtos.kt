@@ -20,10 +20,14 @@ data class MarketCoinDto(
 )
 
 @Serializable
-data class CoinImageDto(val large: String? = null)
+data class CoinImageDto(
+    val large: String? = null,
+)
 
 @Serializable
-data class CoinDescriptionDto(val en: String? = null)
+data class CoinDescriptionDto(
+    val en: String? = null,
+)
 
 @Serializable
 data class CoinMarketDataDto(
@@ -50,7 +54,9 @@ data class CoinDetailsDto(
 )
 
 @Serializable
-data class MarketChartDto(val prices: List<List<Double>> = emptyList())
+data class MarketChartDto(
+    val prices: List<List<Double>> = emptyList(),
+)
 
 @Serializable
 data class SearchCoinDto(
@@ -64,7 +70,11 @@ data class SearchCoinDto(
 )
 
 @Serializable
-data class SearchDto(val coins: List<SearchCoinDto> = emptyList())
+data class SearchDto(
+    val coins: List<SearchCoinDto> = emptyList(),
+)
 
 @Serializable
-data class PingDto(val gecko_says: String? = null)
+data class PingDto(
+    val gecko_says: String? = null,
+)

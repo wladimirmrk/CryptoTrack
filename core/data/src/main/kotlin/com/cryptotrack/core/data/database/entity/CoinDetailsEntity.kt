@@ -1,7 +1,6 @@
 package com.cryptotrack.core.data.database.entity
 
 import androidx.room.Entity
-import androidx.room.PrimaryKey
 
 /** Кэш деталей коина, per-валюта. */
 @Entity(tableName = "coin_details", primaryKeys = ["coinId", "currency"])

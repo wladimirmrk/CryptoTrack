@@ -9,14 +9,19 @@ import java.math.BigDecimal
  * saveHolding суммирует с существующим холдингом; setHoldingAmount задаёт точное значение.
  */
 interface PortfolioRepository {
-
     fun observeHoldings(): Flow<List<Holding>>
 
     fun observeHolding(coinId: String): Flow<Holding?>
 
-    suspend fun saveHolding(coinId: String, amount: BigDecimal)
+    suspend fun saveHolding(
+        coinId: String,
+        amount: BigDecimal,
+    )
 
-    suspend fun setHoldingAmount(coinId: String, amount: BigDecimal)
+    suspend fun setHoldingAmount(
+        coinId: String,
+        amount: BigDecimal,
+    )
 
     suspend fun removeHolding(coinId: String)
 }

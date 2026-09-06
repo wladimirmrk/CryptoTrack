@@ -8,12 +8,14 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface MarketDao {
-
     @Query("SELECT * FROM market_coins WHERE currency = :currency")
     fun observeAll(currency: String): Flow<List<MarketCoinEntity>>
 
     @Query("SELECT * FROM market_coins WHERE currency = :currency AND coinId = :coinId")
-    suspend fun get(coinId: String, currency: String): MarketCoinEntity?
+    suspend fun get(
+        coinId: String,
+        currency: String,
+    ): MarketCoinEntity?
 
     @Upsert
     suspend fun upsertAll(coins: List<MarketCoinEntity>)

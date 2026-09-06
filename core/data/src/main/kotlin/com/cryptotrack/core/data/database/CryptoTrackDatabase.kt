@@ -29,10 +29,15 @@ import com.cryptotrack.core.data.database.entity.PriceHistoryEntity
 )
 abstract class CryptoTrackDatabase : RoomDatabase() {
     abstract fun holdingDao(): HoldingDao
+
     abstract fun favoriteDao(): FavoriteDao
+
     abstract fun marketDao(): MarketDao
+
     abstract fun coinDetailsDao(): CoinDetailsDao
+
     abstract fun priceHistoryDao(): PriceHistoryDao
+
     abstract fun cacheMetaDao(): CacheMetaDao
 
     companion object {

@@ -6,7 +6,6 @@ import org.junit.Test
 import java.math.BigDecimal
 
 class MoneyFormatTest {
-
     @Test
     fun `usd formats grouped two decimals`() {
         assertThat(MoneyFormat.usd(BigDecimal("12450"))).isEqualTo("$12,450.00")

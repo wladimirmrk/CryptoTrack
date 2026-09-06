@@ -5,7 +5,10 @@ package com.cryptotrack.core.model
  * apiDays — параметр /market_chart; HOUR_1 и HOUR_24 оба смотрят последние сутки,
  * HOUR_1 дополнительно обрезается до 60 минут на уровне источника данных.
  */
-enum class ChartRange(val apiDays: String, val label: String) {
+enum class ChartRange(
+    val apiDays: String,
+    val label: String,
+) {
     HOUR_1(apiDays = "1", label = "1H"),
     HOUR_24(apiDays = "1", label = "24H"),
     DAY_7(apiDays = "7", label = "7D"),

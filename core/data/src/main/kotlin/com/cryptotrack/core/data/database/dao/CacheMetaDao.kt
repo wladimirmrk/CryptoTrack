@@ -8,7 +8,6 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface CacheMetaDao {
-
     @Query("SELECT * FROM cache_meta WHERE `key` = :key")
     fun observe(key: String): Flow<CacheMetaEntity?>
 

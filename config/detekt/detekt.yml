@@ -1,4 +1,4 @@
-# Detekt: минимальная конфигурация Phase 1. Ужесточение — Phase 11 (development-plan).
+# Detekt: минимальная конфигурация Phase 2. Ужесточение — Phase 11 (development-plan).
 build:
   maxIssues: 0
 
@@ -7,6 +7,12 @@ complexity:
     threshold: 120
   LongParameterList:
     active: false # Compose-компоненты закономерно имеют много параметров
+  TooManyFunctions:
+    active: true
+    thresholdInFiles: 20
+    thresholdInClasses: 15
+    thresholdInInterfaces: 15
+    thresholdInObjects: 15
 
 style:
   MagicNumber:
@@ -23,3 +29,9 @@ naming:
       - Composable
   TopLevelPropertyNaming:
     constantPattern: '[A-Za-z][A-Za-z0-9]*|[A-Z][_A-Z0-9]*' # Compose-константы в camelCase
+  ConstructorParameterNaming:
+    ignoreAnnotated:
+      - Serializable # DTO зеркалят JSON-поля API (snake_case)
+
+formatting:
+  active: false # форматтер-источник — ktlint CLI 1.8 (верификация добавится в Phase 11); встроенный ktlint detekt 1.23.8 старее и расходится

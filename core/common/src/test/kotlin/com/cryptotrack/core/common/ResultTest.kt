@@ -9,7 +9,6 @@ import com.google.common.truth.Truth.assertThat
 import org.junit.Test
 
 class ResultTest {
-
     @Test
     fun `map transforms success data`() {
         val result: Result<Int> = Result.Success(1)

@@ -10,16 +10,16 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class SettingsRepositoryImpl @Inject constructor(
+class SettingsRepositoryImpl
+@Inject
+constructor(
     private val dataSource: SettingsDataSource,
 ) : SettingsRepository {
-
     override val settings: Flow<AppSettings> = dataSource.settings
 
     override suspend fun setCurrency(currency: Currency) = dataSource.setCurrency(currency)
 
     override suspend fun setDarkMode(enabled: Boolean) = dataSource.setDarkMode(enabled)
 
-    override suspend fun setRefreshInterval(interval: RefreshInterval) =
-        dataSource.setRefreshInterval(interval)
+    override suspend fun setRefreshInterval(interval: RefreshInterval) = dataSource.setRefreshInterval(interval)
 }

@@ -8,7 +8,6 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface FavoriteDao {
-
     @Query("SELECT * FROM favorites ORDER BY addedAtMillis DESC")
     fun observeAll(): Flow<List<FavoriteEntity>>
 
