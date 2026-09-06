@@ -1,0 +1,12 @@
+<resources>
+    <string name="portfolio_title">Portfolio</string>
+    <string name="total_balance">Total Balance</string>
+    <string name="change_24h">24h Change</string>
+    <string name="allocation">Allocation</string>
+    <string name="your_assets">Your Assets</string>
+    <string name="portfolio_empty_title">Your portfolio is empty.</string>
+    <string name="portfolio_empty_message">Start by adding your first asset to track your crypto journey.</string>
+    <string name="portfolio_add_first">Add First Asset</string>
+    <string name="portfolio_how_to_fund">HOW TO FUND YOUR ACCOUNT</string>
+    <string name="search_cd">Search assets</string>
+</resources>
