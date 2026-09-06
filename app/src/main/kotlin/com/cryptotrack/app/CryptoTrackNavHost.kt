@@ -19,6 +19,7 @@ import com.cryptotrack.core.navigation.CoinDetailsRoute
 import com.cryptotrack.core.navigation.EditAssetRoute
 import com.cryptotrack.core.navigation.FavoritesRoute
 import com.cryptotrack.core.navigation.MarketRoute
+import com.cryptotrack.feature.coindetails.navigation.coinDetailsGraph
 import com.cryptotrack.feature.market.navigation.marketGraph
 import com.cryptotrack.core.navigation.PortfolioRoute
 import com.cryptotrack.core.navigation.SearchRoute
@@ -84,10 +85,10 @@ fun CryptoTrackNavHost(
             composable<FavoritesRoute> {
                 PlaceholderScreen(title = "Favorites", phaseHint = "Phase 6")
             }
-            composable<CoinDetailsRoute> { entry ->
-                val route = entry.toRoute<CoinDetailsRoute>()
-                PlaceholderScreen(title = "Coin Details: ${route.coinId}", phaseHint = "Phase 5")
-            }
+            coinDetailsGraph(
+                onBack = { navController.popBackStack() },
+                onAddToPortfolio = { coinId -> navController.navigate(AddAssetRoute(coinId)) },
+            )
             composable<SearchRoute> {
                 PlaceholderScreen(title = "Search", phaseHint = "Phase 6")
             }
