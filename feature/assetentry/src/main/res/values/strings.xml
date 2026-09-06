@@ -20,4 +20,7 @@
     <string name="remove_asset">Remove Asset</string>
     <string name="asset_not_found">Asset not found</string>
     <string name="go_back">Go Back</string>
+    <string name="delete_asset_title">Delete Asset?</string>
+    <string name="delete_asset_message">Are you sure you want to remove %1$s from your portfolio? This action cannot be undone.</string>
+    <string name="delete">Delete</string>
 </resources>

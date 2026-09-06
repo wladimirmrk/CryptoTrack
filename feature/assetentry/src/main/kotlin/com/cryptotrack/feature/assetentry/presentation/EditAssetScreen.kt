@@ -82,6 +82,15 @@ fun EditAssetScreen(
             )
         }
     }
+
+    // Delete Confirmation dialog (mockup c7b9c7e7) over the Edit Asset screen.
+    if (state.showDeleteConfirmation) {
+        DeleteConfirmationDialog(
+            coinName = state.coinName,
+            onConfirm = viewModel::onConfirmDelete,
+            onDismiss = viewModel::onDismissDelete,
+        )
+    }
 }
 
 @Composable
