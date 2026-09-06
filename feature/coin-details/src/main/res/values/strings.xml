@@ -1,0 +1,15 @@
+<resources>
+    <string name="details_title_placeholder">Loading…</string>
+    <string name="back_cd">Back</string>
+    <string name="favorite_cd">Favorite</string>
+    <string name="market_stats">Market Stats</string>
+    <string name="market_cap">Market Cap</string>
+    <string name="volume_24h">24h Vol</string>
+    <string name="circ_supply">Circ Supply</string>
+    <string name="high_24h">24h High</string>
+    <string name="low_24h">24h Low</string>
+    <string name="about_title">About</string>
+    <string name="read_more">Read More</string>
+    <string name="read_less">Read Less</string>
+    <string name="add_to_portfolio">Add to Portfolio</string>
+</resources>
