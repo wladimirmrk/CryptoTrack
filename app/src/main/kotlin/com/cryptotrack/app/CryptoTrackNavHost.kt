@@ -20,6 +20,8 @@ import com.cryptotrack.core.navigation.EditAssetRoute
 import com.cryptotrack.core.navigation.FavoritesRoute
 import com.cryptotrack.core.navigation.MarketRoute
 import com.cryptotrack.feature.coindetails.navigation.coinDetailsGraph
+import com.cryptotrack.feature.favorites.navigation.favoritesGraph
+import com.cryptotrack.feature.search.navigation.searchGraph
 import com.cryptotrack.feature.market.navigation.marketGraph
 import com.cryptotrack.core.navigation.PortfolioRoute
 import com.cryptotrack.core.navigation.SearchRoute
@@ -82,16 +84,26 @@ fun CryptoTrackNavHost(
             composable<PortfolioRoute> {
                 PlaceholderScreen(title = "Portfolio", phaseHint = "Phase 7")
             }
-            composable<FavoritesRoute> {
-                PlaceholderScreen(title = "Favorites", phaseHint = "Phase 6")
-            }
+            favoritesGraph(
+                onCoinClick = { coinId -> navController.navigate(CoinDetailsRoute(coinId)) },
+                onBrowseMarket = {
+                    navController.navigate(MarketRoute) {
+                        popUpTo(navController.graph.findStartDestination().id) { saveState = true }
+                        launchSingleTop = true
+                        restoreState = true
+                    }
+                },
+                onSearchClick = { navController.navigate(SearchRoute) },
+            )
             coinDetailsGraph(
                 onBack = { navController.popBackStack() },
                 onAddToPortfolio = { coinId -> navController.navigate(AddAssetRoute(coinId)) },
             )
-            composable<SearchRoute> {
-                PlaceholderScreen(title = "Search", phaseHint = "Phase 6")
-            }
+            searchGraph(
+                onBack = { navController.popBackStack() },
+                onCoinClick = { coinId -> navController.navigate(CoinDetailsRoute(coinId)) },
+                onSettingsClick = { navController.navigate(SettingsRoute) },
+            )
             composable<SettingsRoute> {
                 PlaceholderScreen(title = "Settings", phaseHint = "Phase 9")
             }
