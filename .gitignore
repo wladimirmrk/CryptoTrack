@@ -16,3 +16,6 @@ Thumbs.db
 *.jks
 *.keystore
 keystore.properties
+
+# ZCode session files
+.zcode/

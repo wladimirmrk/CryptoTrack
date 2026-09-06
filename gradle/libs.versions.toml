@@ -1,11 +1,11 @@
 # Version catalog — единственный источник версий проекта.
-# Комбо зафиксировано как проверенно-совместимое (см. docs/decisions/ADR-006..011 и development-plan Phase 1):
-# AGP 8.13.x + Gradle 8.14.x + Kotlin 2.2.21 + KSP 2.2.21-2.0.5 + Hilt 2.60.x.
+# Стек (сентябрь 2026, проверен сборкой, см. ADR-015):
+# AGP 9.4.x + Gradle 9.7.x + built-in Kotlin 2.3.21 (compiler-плагины) + KSP 2.3.11 + Hilt 2.60.x.
 
 [versions]
-agp = "8.13.2"
-kotlin = "2.2.21"
-ksp = "2.2.21-2.0.5"
+agp = "9.4.0"
+kotlin = "2.3.21"
+ksp = "2.3.11"
 
 hilt = "2.60.1"
 hiltNavigationCompose = "1.4.0"
@@ -22,8 +22,8 @@ datastore = "1.2.1"
 
 retrofit = "3.0.0"
 okhttp = "5.5.0"
-kotlinxSerialization = "1.9.0"
-coroutines = "1.10.2"
+kotlinxSerialization = "1.11.0"
+coroutines = "1.11.0"
 
 coil = "3.6.2"
 vico = "3.3.1"
@@ -38,6 +38,7 @@ detekt = "1.23.8"
 # Convention plugin classpath (build-logic)
 android-gradlePlugin = { module = "com.android.tools.build:gradle", version.ref = "agp" }
 kotlin-gradlePlugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
+kotlin-composeCompiler-gradlePlugin = { module = "org.jetbrains.kotlin:compose-compiler-gradle-plugin", version.ref = "kotlin" }
 ksp-gradlePlugin = { module = "com.google.devtools.ksp:com.google.devtools.ksp.gradle.plugin", version.ref = "ksp" }
 hilt-gradlePlugin = { module = "com.google.dagger:hilt-android-gradle-plugin", version.ref = "hilt" }
 room-gradlePlugin = { module = "androidx.room:room-gradle-plugin", version.ref = "room" }
