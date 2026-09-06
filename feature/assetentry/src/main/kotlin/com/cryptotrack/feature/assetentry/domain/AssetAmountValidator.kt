@@ -33,13 +33,15 @@ object AssetAmountValidator {
 
     fun validate(raw: String): AssetAmountValidation {
         val text = raw.trim()
-        if (text.isEmpty()) return AssetAmountValidation.Empty
-        if (!decimalPattern.matches(text)) return AssetAmountValidation.InvalidFormat
-        val amount = BigDecimal(text)
-        return if (amount.signum() > 0) {
-            AssetAmountValidation.Valid(amount)
-        } else {
-            AssetAmountValidation.NotPositive
+        val amount = when {
+            text.isEmpty() -> null
+            else -> text.takeIf { decimalPattern.matches(it) }?.let(::BigDecimal)
+        }
+        return when {
+            text.isEmpty() -> AssetAmountValidation.Empty
+            amount == null -> AssetAmountValidation.InvalidFormat
+            amount.signum() > 0 -> AssetAmountValidation.Valid(amount)
+            else -> AssetAmountValidation.NotPositive
         }
     }
 

@@ -25,6 +25,7 @@ dependencies {
     implementation(project(":feature:favorites"))
     implementation(project(":feature:search"))
     implementation(project(":feature:portfolio"))
+    implementation(project(":feature:assetentry"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.activity.compose)

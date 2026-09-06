@@ -1,0 +1,12 @@
+<resources>
+    <string name="add_asset_title">Add Asset</string>
+    <string name="amount_owned_label">Amount Owned (%1$s)</string>
+    <string name="amount_hint">0.00</string>
+    <string name="estimated_total_value">Estimated Total Value</string>
+    <string name="cancel">Cancel</string>
+    <string name="save_asset">Save Asset</string>
+    <string name="close_cd">Close</string>
+    <string name="amount_error_invalid">Enter a valid amount</string>
+    <string name="amount_error_not_positive">Amount must be greater than zero</string>
+    <string name="value_unavailable">—</string>
+</resources>
