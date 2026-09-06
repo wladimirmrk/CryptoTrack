@@ -6,14 +6,14 @@ import com.cryptotrack.core.navigation.PortfolioRoute
 import com.cryptotrack.feature.portfolio.presentation.PortfolioScreen
 
 fun NavGraphBuilder.portfolioGraph(
-    onCoinClick: (String) -> Unit,
+    onAssetClick: (String) -> Unit,
     onSearchClick: () -> Unit,
     onAddFirstAsset: () -> Unit,
     onHowToFund: () -> Unit,
 ) {
     composable<PortfolioRoute> {
         PortfolioScreen(
-            onCoinClick = onCoinClick,
+            onAssetClick = onAssetClick,
             onSearchClick = onSearchClick,
             onAddFirstAsset = onAddFirstAsset,
             onHowToFund = onHowToFund,

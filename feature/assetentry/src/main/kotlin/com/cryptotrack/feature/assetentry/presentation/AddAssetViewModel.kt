@@ -10,7 +10,6 @@ import com.cryptotrack.feature.assetentry.domain.AssetAmountValidator
 import com.cryptotrack.feature.assetentry.domain.EstimatedValueCalculator
 import com.cryptotrack.feature.assetentry.domain.ObserveEntryCoinUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import java.math.BigDecimal
 import java.util.Locale
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -20,12 +19,6 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-
-/** Inline amount field error (mapped to string resources on screen). */
-enum class AmountInputError {
-    InvalidFormat,
-    NotPositive,
-}
 
 data class AddAssetUiState(
     val isLoading: Boolean = false,
@@ -64,13 +57,10 @@ class AddAssetViewModel @Inject constructor(
         isSaved,
     ) { coin, input, saving, saved ->
         val validation = AssetAmountValidator.validate(input)
-        // Empty input renders the mockup's "$0.00" placeholder; invalid input → dash.
-        val amount = when (validation) {
-            is AssetAmountValidation.Valid -> validation.amount
-            AssetAmountValidation.Empty -> BigDecimal.ZERO
-            else -> null
-        }
-        val estimated = EstimatedValueCalculator.compute(amount, coin?.currentPrice)
+        val estimated = EstimatedValueCalculator.compute(
+            estimatedAmount(validation),
+            coin?.currentPrice,
+        )
         AddAssetUiState(
             isLoading = false,
             coinName = coin?.name.orEmpty(),
@@ -80,7 +70,7 @@ class AddAssetViewModel @Inject constructor(
             changeText = coin?.let { MoneyFormat.percent(it.priceChangePercentage24h) },
             isPriceUp = (coin?.priceChangePercentage24h ?: 0.0) >= 0.0,
             amountInput = input,
-            amountError = amountError(validation),
+            amountError = amountInputError(validation),
             estimatedValueText = estimated?.let(MoneyFormat::usd),
             isSaveEnabled = validation is AssetAmountValidation.Valid && !saving && !saved,
             isSaving = saving,
@@ -106,11 +96,5 @@ class AddAssetViewModel @Inject constructor(
             isSaving.update { false }
             isSaved.update { true }
         }
-    }
-
-    private fun amountError(validation: AssetAmountValidation): AmountInputError? = when (validation) {
-        AssetAmountValidation.InvalidFormat -> AmountInputError.InvalidFormat
-        AssetAmountValidation.NotPositive -> AmountInputError.NotPositive
-        else -> null
     }
 }

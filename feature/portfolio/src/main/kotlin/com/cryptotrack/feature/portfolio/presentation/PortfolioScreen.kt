@@ -49,7 +49,7 @@ import java.util.Locale
  */
 @Composable
 fun PortfolioScreen(
-    onCoinClick: (String) -> Unit,
+    onAssetClick: (String) -> Unit,
     onSearchClick: () -> Unit,
     onAddFirstAsset: () -> Unit,
     onHowToFund: () -> Unit,
@@ -75,7 +75,7 @@ fun PortfolioScreen(
                 onHowToFund = onHowToFund,
             )
 
-            else -> PortfolioContent(state = state, onCoinClick = onCoinClick)
+            else -> PortfolioContent(state = state, onAssetClick = onAssetClick)
         }
     }
 }
@@ -99,7 +99,7 @@ private fun PortfolioTopBar(onSearchClick: () -> Unit) {
 @Composable
 private fun PortfolioContent(
     state: PortfolioUiState,
-    onCoinClick: (String) -> Unit,
+    onAssetClick: (String) -> Unit,
 ) {
     LazyColumn(modifier = Modifier.fillMaxSize()) {
         item {
@@ -181,7 +181,7 @@ private fun PortfolioContent(
                 isUp = position.isUp,
                 imageUrl = position.imageUrl,
                 amountText = position.amountText,
-                onClick = { onCoinClick(position.coinId) },
+                onClick = { onAssetClick(position.coinId) },
             )
         }
     }

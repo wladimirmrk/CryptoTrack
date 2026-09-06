@@ -20,6 +20,7 @@ import com.cryptotrack.core.navigation.EditAssetRoute
 import com.cryptotrack.core.navigation.FavoritesRoute
 import com.cryptotrack.core.navigation.MarketRoute
 import com.cryptotrack.feature.assetentry.navigation.addAssetGraph
+import com.cryptotrack.feature.assetentry.navigation.editAssetGraph
 import com.cryptotrack.feature.coindetails.navigation.coinDetailsGraph
 import com.cryptotrack.feature.favorites.navigation.favoritesGraph
 import com.cryptotrack.feature.portfolio.navigation.portfolioGraph
@@ -84,7 +85,9 @@ fun CryptoTrackNavHost(
                 onSearchClick = { navController.navigate(SearchRoute) },
             )
             portfolioGraph(
-                onCoinClick = { coinId -> navController.navigate(CoinDetailsRoute(coinId)) },
+                // Flow F1 (assumption A-15): tapping a portfolio row opens the Edit Asset
+                // screen; Coin Details stays reachable from Market/Search/Favorites.
+                onAssetClick = { coinId -> navController.navigate(EditAssetRoute(coinId)) },
                 onSearchClick = { navController.navigate(SearchRoute) },
                 onAddFirstAsset = { navController.navigate(SearchRoute) },
                 onHowToFund = { navController.navigate(SettingsRoute) },
@@ -123,10 +126,11 @@ fun CryptoTrackNavHost(
                     }
                 },
             )
-            composable<EditAssetRoute> { entry ->
-                val route = entry.toRoute<EditAssetRoute>()
-                PlaceholderScreen(title = "Edit Asset: ${route.coinId}", phaseHint = "Phase 8")
-            }
+            editAssetGraph(
+                onBack = { navController.popBackStack() },
+                onSaved = { navController.popBackStack() },
+                onRemoved = { navController.popBackStack() },
+            )
         }
     }
 }

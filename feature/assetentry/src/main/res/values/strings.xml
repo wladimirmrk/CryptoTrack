@@ -9,4 +9,15 @@
     <string name="amount_error_invalid">Enter a valid amount</string>
     <string name="amount_error_not_positive">Amount must be greater than zero</string>
     <string name="value_unavailable">—</string>
+    <string name="edit_asset_title">Edit Asset</string>
+    <string name="back_cd">Back</string>
+    <string name="current_price">Current Price</string>
+    <string name="holdings_amount_label">Holdings Amount</string>
+    <string name="total_value_preview">Total Value Preview</string>
+    <string name="estimated">Estimated</string>
+    <string name="based_on_current_price">Based on current market price</string>
+    <string name="save_changes">Save Changes</string>
+    <string name="remove_asset">Remove Asset</string>
+    <string name="asset_not_found">Asset not found</string>
+    <string name="go_back">Go Back</string>
 </resources>

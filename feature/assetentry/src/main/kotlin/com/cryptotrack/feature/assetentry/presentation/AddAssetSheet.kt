@@ -194,8 +194,9 @@ private fun CoinInfoRow(state: AddAssetUiState) {
     }
 }
 
+/** Inline error under the amount field; shared with the Edit Asset screen. */
 @Composable
-private fun AmountErrorText(error: AmountInputError?) {
+internal fun AmountErrorText(error: AmountInputError?) {
     val text = when (error) {
         AmountInputError.InvalidFormat -> stringResource(R.string.amount_error_invalid)
         AmountInputError.NotPositive -> stringResource(R.string.amount_error_not_positive)
