@@ -24,3 +24,4 @@ dependencyResolutionManagement {
 rootProject.name = "CryptoTrack"
 
 include(":app")
+include(":core:common")
