@@ -230,6 +230,7 @@ Header: `arrow_back`, «Settings». Секция **Preferences**: Currency — `
 | A-12 | Bottom nav: M3 `NavigationBar` 80dp вместо 56px из design.md |
 | A-13 | В мобильной версии используем `display-lg-mobile` (28/36) для баланса и крупных цифр |
 | A-14 | Кнопка «Add First Asset» и строки Market/Search ведут на Add-шит/Details соответственно; переходы, не показанные в макете, следуют F1–F5 |
+| A-15 | Тап по строке актива в портфеле ведёт на **Edit Asset** (вход в редактирование холдинга, Phase 8); Coin Details остаётся доступен из Market/Search/Favorites |
 
 ## 8. Соответствие план → макеты (для фаз 4–9)
 

@@ -19,6 +19,8 @@ import com.cryptotrack.core.navigation.CoinDetailsRoute
 import com.cryptotrack.core.navigation.EditAssetRoute
 import com.cryptotrack.core.navigation.FavoritesRoute
 import com.cryptotrack.core.navigation.MarketRoute
+import com.cryptotrack.feature.assetentry.navigation.addAssetGraph
+import com.cryptotrack.feature.assetentry.navigation.editAssetGraph
 import com.cryptotrack.feature.coindetails.navigation.coinDetailsGraph
 import com.cryptotrack.feature.favorites.navigation.favoritesGraph
 import com.cryptotrack.feature.portfolio.navigation.portfolioGraph
@@ -83,7 +85,9 @@ fun CryptoTrackNavHost(
                 onSearchClick = { navController.navigate(SearchRoute) },
             )
             portfolioGraph(
-                onCoinClick = { coinId -> navController.navigate(CoinDetailsRoute(coinId)) },
+                // Flow F1 (assumption A-15): tapping a portfolio row opens the Edit Asset
+                // screen; Coin Details stays reachable from Market/Search/Favorites.
+                onAssetClick = { coinId -> navController.navigate(EditAssetRoute(coinId)) },
                 onSearchClick = { navController.navigate(SearchRoute) },
                 onAddFirstAsset = { navController.navigate(SearchRoute) },
                 onHowToFund = { navController.navigate(SettingsRoute) },
@@ -111,14 +115,22 @@ fun CryptoTrackNavHost(
             composable<SettingsRoute> {
                 PlaceholderScreen(title = "Settings", phaseHint = "Phase 9")
             }
-            composable<AddAssetRoute> { entry ->
-                val route = entry.toRoute<AddAssetRoute>()
-                PlaceholderScreen(title = "Add Asset: ${route.coinId}", phaseHint = "Phase 8")
-            }
-            composable<EditAssetRoute> { entry ->
-                val route = entry.toRoute<EditAssetRoute>()
-                PlaceholderScreen(title = "Edit Asset: ${route.coinId}", phaseHint = "Phase 8")
-            }
+            addAssetGraph(
+                onDismiss = { navController.popBackStack() },
+                onSaved = {
+                    navController.navigate(PortfolioRoute) {
+                        // Flow F2 "Save → return to Portfolio": drop the sheet entry so
+                        // back does not reopen the form; single top avoids a duplicate.
+                        popUpTo<AddAssetRoute> { inclusive = true }
+                        launchSingleTop = true
+                    }
+                },
+            )
+            editAssetGraph(
+                onBack = { navController.popBackStack() },
+                onSaved = { navController.popBackStack() },
+                onRemoved = { navController.popBackStack() },
+            )
         }
     }
 }
