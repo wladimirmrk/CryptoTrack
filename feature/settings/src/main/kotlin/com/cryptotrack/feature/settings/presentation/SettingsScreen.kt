@@ -53,6 +53,7 @@ import com.cryptotrack.feature.settings.R
 @Composable
 fun SettingsScreen(
     onBack: () -> Unit,
+    onAboutClick: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: SettingsViewModel = hiltViewModel(),
 ) {
@@ -104,8 +105,15 @@ fun SettingsScreen(
             icon = Icons.Filled.Api,
             title = stringResource(R.string.api_connection_title),
             subtitle = null,
-            valueText = stringResource(R.string.api_connection_checking),
-            // Макет показывает chevron, но не задаёт цель перехода (допущение в design-analysis).
+            valueText = when (val status = state.apiStatus) {
+                ApiStatus.Checking -> stringResource(R.string.api_connection_checking)
+                is ApiStatus.Connected -> stringResource(
+                    R.string.api_connection_connected,
+                    status.latencyMs,
+                )
+                ApiStatus.Unavailable -> stringResource(R.string.api_connection_unavailable)
+            },
+            // Макет показывает chevron, но не задаёт цель перехода (допущение A-16).
             onClick = null,
             showChevron = true,
         )
@@ -113,7 +121,7 @@ fun SettingsScreen(
             icon = Icons.Filled.Info,
             title = stringResource(R.string.about_title),
             subtitle = stringResource(R.string.about_subtitle),
-            onClick = null, // About-экран — следующий этап фазы.
+            onClick = onAboutClick,
             showChevron = true,
         )
         SettingsRow(
