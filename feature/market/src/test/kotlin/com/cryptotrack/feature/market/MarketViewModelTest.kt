@@ -102,7 +102,11 @@ class MarketViewModelTest {
     private val repository = FakeMarketRepository()
     private val favorites = FakeFavoritesRepository()
     private val settings = FakeSettingsRepository()
-    private val viewModel = MarketViewModel(
+
+    // Main-диспетчер подключается к scheduler теста (setMain) до создания VM:
+    // viewModelScope захватывает Main в момент stateIn. Канонический паттерн
+    // виртуального времени — как в MarketAutoRefreshTest ниже.
+    private fun createViewModel() = MarketViewModel(
         observeMarket = ObserveMarketUseCase(repository, settings),
         refreshMarket = RefreshMarketUseCase(repository, settings),
         favoritesRepository = favorites,
@@ -110,103 +114,133 @@ class MarketViewModelTest {
     )
 
     @Test
-    fun `sorts by market cap descending by default`() = runTest {
-        repository.coins.value = listOf(
-            coin("a", "Alpha", "1.00", cap = 100L, change = 1.0),
-            coin("b", "Beta", "2.00", cap = 300L, change = 2.0),
-            coin("c", "Gamma", "3.00", cap = 200L, change = 3.0),
-        )
-        repository.lastUpdated.value = 1_000L
-        advanceUntilIdle()
+    fun `sorts by market cap descending by default`() = try {
+        runTest {
+            Dispatchers.setMain(StandardTestDispatcher(testScheduler))
+            val viewModel = createViewModel()
+            repository.coins.value = listOf(
+                coin("a", "Alpha", "1.00", cap = 100L, change = 1.0),
+                coin("b", "Beta", "2.00", cap = 300L, change = 2.0),
+                coin("c", "Gamma", "3.00", cap = 200L, change = 3.0),
+            )
+            repository.lastUpdated.value = 1_000L
+            advanceUntilIdle()
 
-        viewModel.uiState.test {
-            awaitItem() // initialValue stateIn
-            runCurrent()
-            val state = awaitItem()
-            assertThat(state.coins.map { it.coinId }).containsExactly("b", "c", "a").inOrder()
-            cancelAndIgnoreRemainingEvents()
+            viewModel.uiState.test {
+                awaitItem() // initialValue stateIn
+                runCurrent()
+                val state = awaitItem()
+                assertThat(state.coins.map { it.coinId }).containsExactly("b", "c", "a").inOrder()
+                cancelAndIgnoreRemainingEvents()
+            }
         }
+    } finally {
+        Dispatchers.resetMain()
     }
 
     @Test
-    fun `applied filter reorders list`() = runTest {
-        repository.coins.value = listOf(
-            coin("a", "Alpha", "1.00", cap = 100L, change = 1.0),
-            coin("b", "Beta", "2.00", cap = 300L, change = 2.0),
-        )
-        repository.lastUpdated.value = 1_000L
-        advanceUntilIdle()
+    fun `applied filter reorders list`() = try {
+        runTest {
+            Dispatchers.setMain(StandardTestDispatcher(testScheduler))
+            val viewModel = createViewModel()
+            repository.coins.value = listOf(
+                coin("a", "Alpha", "1.00", cap = 100L, change = 1.0),
+                coin("b", "Beta", "2.00", cap = 300L, change = 2.0),
+            )
+            repository.lastUpdated.value = 1_000L
+            advanceUntilIdle()
 
-        viewModel.onApplyFilter(
-            MarketFilter(
-                sortBy = MarketSortBy.PRICE,
-                order = com.cryptotrack.feature.market.domain.SortOrder.ASCENDING,
-            ),
-        )
-        advanceUntilIdle()
+            viewModel.onApplyFilter(
+                MarketFilter(
+                    sortBy = MarketSortBy.PRICE,
+                    order = com.cryptotrack.feature.market.domain.SortOrder.ASCENDING,
+                ),
+            )
+            advanceUntilIdle()
 
-        viewModel.uiState.test {
-            awaitItem()
-            runCurrent()
-            val state = awaitItem()
-            assertThat(state.coins.map { it.coinId }).containsExactly("a", "b").inOrder()
-            cancelAndIgnoreRemainingEvents()
+            viewModel.uiState.test {
+                awaitItem()
+                runCurrent()
+                val state = awaitItem()
+                assertThat(state.coins.map { it.coinId }).containsExactly("a", "b").inOrder()
+                cancelAndIgnoreRemainingEvents()
+            }
         }
+    } finally {
+        Dispatchers.resetMain()
     }
 
     @Test
-    fun `refresh failure with cached data shows offline banner`() = runTest {
-        repository.coins.value = listOf(coin("a", "Alpha", "1.00", cap = 100L, change = 1.0))
-        repository.lastUpdated.value = 1_000L
-        repository.refreshResult = Result.Failure(AppError.Network)
-        advanceUntilIdle()
+    fun `refresh failure with cached data shows offline banner`() = try {
+        runTest {
+            Dispatchers.setMain(StandardTestDispatcher(testScheduler))
+            val viewModel = createViewModel()
+            repository.coins.value = listOf(coin("a", "Alpha", "1.00", cap = 100L, change = 1.0))
+            repository.lastUpdated.value = 1_000L
+            repository.refreshResult = Result.Failure(AppError.Network)
+            advanceUntilIdle()
 
-        viewModel.onRefresh(force = true)
-        advanceUntilIdle()
+            viewModel.onRefresh(force = true)
+            advanceUntilIdle()
 
-        viewModel.uiState.test {
-            awaitItem()
-            runCurrent()
-            val state = awaitItem()
-            assertThat(state.isOffline).isTrue()
-            assertThat(state.showError).isFalse()
-            assertThat(state.error).isEqualTo(AppError.Network)
-            cancelAndIgnoreRemainingEvents()
+            viewModel.uiState.test {
+                awaitItem()
+                runCurrent()
+                val state = awaitItem()
+                assertThat(state.isOffline).isTrue()
+                assertThat(state.showError).isFalse()
+                assertThat(state.error).isEqualTo(AppError.Network)
+                cancelAndIgnoreRemainingEvents()
+            }
         }
+    } finally {
+        Dispatchers.resetMain()
     }
 
     @Test
-    fun `favorite toggle persists and reflects in state`() = runTest {
-        repository.coins.value = listOf(coin("a", "Alpha", "1.00", cap = 100L, change = 1.0))
-        repository.lastUpdated.value = 1_000L
-        advanceUntilIdle()
+    fun `favorite toggle persists and reflects in state`() = try {
+        runTest {
+            Dispatchers.setMain(StandardTestDispatcher(testScheduler))
+            val viewModel = createViewModel()
+            repository.coins.value = listOf(coin("a", "Alpha", "1.00", cap = 100L, change = 1.0))
+            repository.lastUpdated.value = 1_000L
+            advanceUntilIdle()
 
-        viewModel.onFavoriteToggle("a", isFavorite = true)
-        advanceUntilIdle()
+            viewModel.onFavoriteToggle("a", isFavorite = true)
+            advanceUntilIdle()
 
-        viewModel.uiState.test {
-            awaitItem()
-            runCurrent()
-            val state = awaitItem()
-            assertThat(state.coins.single().isFavorite).isTrue()
-            cancelAndIgnoreRemainingEvents()
+            viewModel.uiState.test {
+                awaitItem()
+                runCurrent()
+                val state = awaitItem()
+                assertThat(state.coins.single().isFavorite).isTrue()
+                cancelAndIgnoreRemainingEvents()
+            }
         }
+    } finally {
+        Dispatchers.resetMain()
     }
 
     @Test
-    fun `initial load respects ttl and marks loading state`() = runTest {
-        // Кэш пуст, refresh прошёл успешно → не offline, не fullscreen error.
-        advanceUntilIdle()
+    fun `initial load respects ttl and marks loading state`() = try {
+        runTest {
+            Dispatchers.setMain(StandardTestDispatcher(testScheduler))
+            val viewModel = createViewModel()
+            // Кэш пуст, refresh прошёл успешно → не offline, не fullscreen error.
+            advanceUntilIdle()
 
-        viewModel.uiState.test {
-            awaitItem()
-            runCurrent()
-            val state = awaitItem()
-            assertThat(state.isOffline).isFalse()
-            assertThat(state.showError).isFalse()
-            cancelAndIgnoreRemainingEvents()
+            viewModel.uiState.test {
+                awaitItem()
+                runCurrent()
+                val state = awaitItem()
+                assertThat(state.isOffline).isFalse()
+                assertThat(state.showError).isFalse()
+                cancelAndIgnoreRemainingEvents()
+            }
+            assertThat(repository.refreshCalls).isAtLeast(1)
         }
-        assertThat(repository.refreshCalls).isAtLeast(1)
+    } finally {
+        Dispatchers.resetMain()
     }
 }
 
