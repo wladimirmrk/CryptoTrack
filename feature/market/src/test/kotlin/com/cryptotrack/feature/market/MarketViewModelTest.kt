@@ -20,8 +20,16 @@ import java.math.BigDecimal
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
+import kotlinx.coroutines.test.advanceTimeBy
+import kotlinx.coroutines.test.runCurrent
+import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.advanceUntilIdle
+import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.test.setMain
 import org.junit.Test
 
 private class FakeMarketRepository : MarketRepository {
@@ -65,7 +73,9 @@ private class FakeSettingsRepository : SettingsRepository {
     }
 
     override suspend fun setDarkMode(enabled: Boolean) = Unit
-    override suspend fun setRefreshInterval(interval: RefreshInterval) = Unit
+    override suspend fun setRefreshInterval(interval: RefreshInterval) {
+        settings.value = settings.value.copy(refreshInterval = interval)
+    }
 }
 
 private class FakeFavoritesRepository : FavoritesRepository {
@@ -91,10 +101,12 @@ class MarketViewModelTest {
 
     private val repository = FakeMarketRepository()
     private val favorites = FakeFavoritesRepository()
+    private val settings = FakeSettingsRepository()
     private val viewModel = MarketViewModel(
-        observeMarket = ObserveMarketUseCase(repository, FakeSettingsRepository()),
-        refreshMarket = RefreshMarketUseCase(repository, FakeSettingsRepository()),
+        observeMarket = ObserveMarketUseCase(repository, settings),
+        refreshMarket = RefreshMarketUseCase(repository, settings),
         favoritesRepository = favorites,
+        settingsRepository = settings,
     )
 
     @Test
@@ -109,7 +121,7 @@ class MarketViewModelTest {
 
         viewModel.uiState.test {
             awaitItem() // initialValue stateIn
-            advanceUntilIdle()
+            runCurrent()
             val state = awaitItem()
             assertThat(state.coins.map { it.coinId }).containsExactly("b", "c", "a").inOrder()
             cancelAndIgnoreRemainingEvents()
@@ -135,7 +147,7 @@ class MarketViewModelTest {
 
         viewModel.uiState.test {
             awaitItem()
-            advanceUntilIdle()
+            runCurrent()
             val state = awaitItem()
             assertThat(state.coins.map { it.coinId }).containsExactly("a", "b").inOrder()
             cancelAndIgnoreRemainingEvents()
@@ -154,7 +166,7 @@ class MarketViewModelTest {
 
         viewModel.uiState.test {
             awaitItem()
-            advanceUntilIdle()
+            runCurrent()
             val state = awaitItem()
             assertThat(state.isOffline).isTrue()
             assertThat(state.showError).isFalse()
@@ -174,7 +186,7 @@ class MarketViewModelTest {
 
         viewModel.uiState.test {
             awaitItem()
-            advanceUntilIdle()
+            runCurrent()
             val state = awaitItem()
             assertThat(state.coins.single().isFavorite).isTrue()
             cancelAndIgnoreRemainingEvents()
@@ -188,12 +200,97 @@ class MarketViewModelTest {
 
         viewModel.uiState.test {
             awaitItem()
-            advanceUntilIdle()
+            runCurrent()
             val state = awaitItem()
             assertThat(state.isOffline).isFalse()
             assertThat(state.showError).isFalse()
             cancelAndIgnoreRemainingEvents()
         }
         assertThat(repository.refreshCalls).isAtLeast(1)
+    }
+}
+
+/**
+ * A-7: автообновление маркет-данных. Тикер активен только при активной подписке
+ * на uiState; таймеры идут на виртуальном времени (общий scheduler с runTest).
+ * resetMain — после runTest: на завершающем проходе runTest ещё идут задачи
+ * на Main-диспетчере (остановка WhileSubscribed-upstream).
+ */
+class MarketAutoRefreshTest {
+
+    @Test
+    fun `ticker refreshes on interval without duplicating initial load`() {
+        try {
+            runTest {
+                Dispatchers.setMain(StandardTestDispatcher(testScheduler))
+                val repository = FakeMarketRepository()
+                val settings = FakeSettingsRepository()
+                val viewModel = MarketViewModel(
+                    observeMarket = ObserveMarketUseCase(repository, settings),
+                    refreshMarket = RefreshMarketUseCase(repository, settings),
+                    favoritesRepository = FakeFavoritesRepository(),
+                    settingsRepository = settings,
+                )
+                advanceUntilIdle() // init refresh; uiState ещё никем не подписан — тикер неактивен
+                val initialCalls = repository.refreshCalls
+                assertThat(initialCalls).isEqualTo(1)
+
+                backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) {
+                    // Subscription keeps the auto-refresh ticker active (WhileSubscribed).
+                    viewModel.uiState.collect { }
+                }
+                runCurrent() // подписка запускает upstream и тикер; onStart-эмиссия без refresh
+                assertThat(repository.refreshCalls).isEqualTo(initialCalls)
+
+                advanceTimeBy(RefreshInterval.FIFTEEN_SECONDS.millis)
+                runCurrent()
+                assertThat(repository.refreshCalls).isEqualTo(initialCalls + 1)
+
+                advanceTimeBy(RefreshInterval.FIFTEEN_SECONDS.millis)
+                runCurrent()
+                assertThat(repository.refreshCalls).isEqualTo(initialCalls + 2)
+            }
+        } finally {
+            Dispatchers.resetMain()
+        }
+    }
+
+    @Test
+    fun `interval change rebuilds the refresh timer`() {
+        try {
+            runTest {
+                Dispatchers.setMain(StandardTestDispatcher(testScheduler))
+                val repository = FakeMarketRepository()
+                val settings = FakeSettingsRepository()
+                val viewModel = MarketViewModel(
+                    observeMarket = ObserveMarketUseCase(repository, settings),
+                    refreshMarket = RefreshMarketUseCase(repository, settings),
+                    favoritesRepository = FakeFavoritesRepository(),
+                    settingsRepository = settings,
+                )
+                advanceUntilIdle()
+                val initialCalls = repository.refreshCalls
+
+                backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) {
+                    viewModel.uiState.collect { }
+                }
+                advanceTimeBy(RefreshInterval.FIFTEEN_SECONDS.millis)
+                runCurrent()
+                assertThat(repository.refreshCalls).isEqualTo(initialCalls + 1)
+
+                settings.setRefreshInterval(RefreshInterval.ONE_MINUTE)
+                runCurrent() // flatMapLatest перестраивает таймер: следующий тик через 1m
+
+                advanceTimeBy(RefreshInterval.FIFTEEN_SECONDS.millis)
+                runCurrent()
+                assertThat(repository.refreshCalls).isEqualTo(initialCalls + 1)
+
+                advanceTimeBy(RefreshInterval.ONE_MINUTE.millis)
+                runCurrent()
+                assertThat(repository.refreshCalls).isEqualTo(initialCalls + 2)
+            }
+        } finally {
+            Dispatchers.resetMain()
+        }
     }
 }

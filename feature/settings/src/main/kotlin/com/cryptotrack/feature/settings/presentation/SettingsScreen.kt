@@ -43,6 +43,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.cryptotrack.core.designsystem.component.SectionHeader
 import com.cryptotrack.core.model.Currency
+import com.cryptotrack.core.model.RefreshInterval
 import com.cryptotrack.feature.settings.R
 
 /**
@@ -58,6 +59,7 @@ fun SettingsScreen(
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val versionText = rememberAppVersionText()
     var showCurrencySelector by remember { mutableStateOf(false) }
+    var showIntervalSelector by remember { mutableStateOf(false) }
 
     Column(
         modifier = modifier
@@ -86,14 +88,14 @@ fun SettingsScreen(
             onClick = null,
             showChevron = false,
         ) {
-            Switch(checked = state.isDarkMode, onCheckedChange = null)
+            Switch(checked = state.isDarkMode, onCheckedChange = viewModel::onDarkModeToggle)
         }
         SettingsRow(
             icon = Icons.Filled.Update,
             title = stringResource(R.string.refresh_interval_title),
             subtitle = stringResource(R.string.refresh_interval_subtitle),
             valueText = state.refreshInterval.label,
-            onClick = null, // Refresh interval selector — следующий этап фазы.
+            onClick = { showIntervalSelector = true },
             showChevron = true,
         )
 
@@ -125,23 +127,50 @@ fun SettingsScreen(
     }
 
     if (showCurrencySelector) {
-        CurrencySelectorSheet(
+        SingleChoiceSheet(
+            title = stringResource(R.string.currency_title),
             selected = state.currency,
+            options = Currency.entries.map { currency ->
+                SheetOption(
+                    label = stringResource(R.string.currency_value, currency.name, currency.symbol),
+                    value = currency,
+                )
+            },
             onSelect = viewModel::onCurrencySelect,
             onDismiss = { showCurrencySelector = false },
         )
     }
+
+    if (showIntervalSelector) {
+        SingleChoiceSheet(
+            title = stringResource(R.string.refresh_interval_title),
+            selected = state.refreshInterval,
+            options = RefreshInterval.entries.map { interval ->
+                SheetOption(label = interval.label, value = interval)
+            },
+            onSelect = viewModel::onRefreshIntervalSelect,
+            onDismiss = { showIntervalSelector = false },
+        )
+    }
 }
 
+/** Один вариант одиночного выбора в шите. */
+private data class SheetOption<T>(
+    val label: String,
+    val value: T,
+)
+
 /**
- * Селектор валюты (шит со списком 5 фиатов из Currency): radio-строки,
- * выбор сразу применяет setCurrency и закрывает шит.
+ * Селектор одиночного выбора (шит): Currency / Refresh Interval, radio-строки,
+ * выбор сразу применяет значение (set…) и закрывает шит.
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun CurrencySelectorSheet(
-    selected: Currency,
-    onSelect: (Currency) -> Unit,
+private fun <T> SingleChoiceSheet(
+    title: String,
+    selected: T,
+    options: List<SheetOption<T>>,
+    onSelect: (T) -> Unit,
     onDismiss: () -> Unit,
 ) {
     ModalBottomSheet(onDismissRequest = onDismiss) {
@@ -150,20 +179,13 @@ private fun CurrencySelectorSheet(
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp),
         ) {
-            Text(
-                text = stringResource(R.string.currency_title),
-                style = MaterialTheme.typography.titleLarge,
-            )
-            Currency.entries.forEach { currency ->
+            Text(text = title, style = MaterialTheme.typography.titleLarge)
+            options.forEach { option ->
                 OptionRow(
-                    label = stringResource(
-                        R.string.currency_value,
-                        currency.name,
-                        currency.symbol,
-                    ),
-                    selected = currency == selected,
+                    label = option.label,
+                    selected = option.value == selected,
                     onClick = {
-                        onSelect(currency)
+                        onSelect(option.value)
                         onDismiss()
                     },
                 )

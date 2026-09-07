@@ -44,4 +44,16 @@ class SettingsViewModel @Inject constructor(
             settingsRepository.setCurrency(currency)
         }
     }
+
+    fun onDarkModeToggle(enabled: Boolean) {
+        viewModelScope.launch {
+            settingsRepository.setDarkMode(enabled)
+        }
+    }
+
+    fun onRefreshIntervalSelect(interval: RefreshInterval) {
+        viewModelScope.launch {
+            settingsRepository.setRefreshInterval(interval)
+        }
+    }
 }
