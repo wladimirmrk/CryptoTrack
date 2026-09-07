@@ -47,7 +47,10 @@ class MarketViewModel @Inject constructor(
                 error == null &&
                 refreshing,
             coins = filter.apply(snapshot.coins).map { coin ->
-                coin.toCoinUi(isFavorite = favoriteIds.contains(coin.id))
+                coin.toCoinUi(
+                    isFavorite = favoriteIds.contains(coin.id),
+                    currencySymbol = snapshot.currencySymbol,
+                )
             },
             error = error,
             isRefreshing = refreshing,

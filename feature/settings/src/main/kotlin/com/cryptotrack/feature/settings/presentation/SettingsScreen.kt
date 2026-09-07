@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -15,17 +16,24 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Api
 import androidx.compose.material.icons.filled.ChevronRight
+import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.DarkMode
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Payments
 import androidx.compose.material.icons.filled.Update
+import androidx.compose.material.icons.outlined.Circle
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -34,6 +42,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.cryptotrack.core.designsystem.component.SectionHeader
+import com.cryptotrack.core.model.Currency
 import com.cryptotrack.feature.settings.R
 
 /**
@@ -48,6 +57,7 @@ fun SettingsScreen(
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val versionText = rememberAppVersionText()
+    var showCurrencySelector by remember { mutableStateOf(false) }
 
     Column(
         modifier = modifier
@@ -66,7 +76,7 @@ fun SettingsScreen(
                 state.currency.name,
                 state.currency.symbol,
             ),
-            onClick = null, // Currency selector — следующий этап фазы.
+            onClick = { showCurrencySelector = true },
             showChevron = true,
         )
         SettingsRow(
@@ -111,6 +121,81 @@ fun SettingsScreen(
             valueText = versionText,
             onClick = null,
             showChevron = false,
+        )
+    }
+
+    if (showCurrencySelector) {
+        CurrencySelectorSheet(
+            selected = state.currency,
+            onSelect = viewModel::onCurrencySelect,
+            onDismiss = { showCurrencySelector = false },
+        )
+    }
+}
+
+/**
+ * Селектор валюты (шит со списком 5 фиатов из Currency): radio-строки,
+ * выбор сразу применяет setCurrency и закрывает шит.
+ */
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun CurrencySelectorSheet(
+    selected: Currency,
+    onSelect: (Currency) -> Unit,
+    onDismiss: () -> Unit,
+) {
+    ModalBottomSheet(onDismissRequest = onDismiss) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp),
+        ) {
+            Text(
+                text = stringResource(R.string.currency_title),
+                style = MaterialTheme.typography.titleLarge,
+            )
+            Currency.entries.forEach { currency ->
+                OptionRow(
+                    label = stringResource(
+                        R.string.currency_value,
+                        currency.name,
+                        currency.symbol,
+                    ),
+                    selected = currency == selected,
+                    onClick = {
+                        onSelect(currency)
+                        onDismiss()
+                    },
+                )
+            }
+            Spacer(modifier = Modifier.height(24.dp))
+        }
+    }
+}
+
+/** Radio-строка селектора (паттерн Market Filters: check_circle у выбранного). */
+@Composable
+private fun OptionRow(
+    label: String,
+    selected: Boolean,
+    onClick: () -> Unit,
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(onClick = onClick)
+            .padding(vertical = 10.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Text(text = label, style = MaterialTheme.typography.bodyLarge, modifier = Modifier.weight(1f))
+        Icon(
+            imageVector = if (selected) Icons.Filled.CheckCircle else Icons.Outlined.Circle,
+            contentDescription = null,
+            tint = if (selected) {
+                MaterialTheme.colorScheme.primaryContainer
+            } else {
+                MaterialTheme.colorScheme.outlineVariant
+            },
         )
     }
 }

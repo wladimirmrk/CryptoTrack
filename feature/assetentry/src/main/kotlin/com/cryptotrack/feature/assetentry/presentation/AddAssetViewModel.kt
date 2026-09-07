@@ -55,7 +55,9 @@ class AddAssetViewModel @Inject constructor(
         amountInput,
         isSaving,
         isSaved,
-    ) { coin, input, saving, saved ->
+    ) { entry, input, saving, saved ->
+        val coin = entry.coin
+        val symbol = entry.currencySymbol
         val validation = AssetAmountValidator.validate(input)
         val estimated = EstimatedValueCalculator.compute(
             estimatedAmount(validation),
@@ -66,12 +68,12 @@ class AddAssetViewModel @Inject constructor(
             coinName = coin?.name.orEmpty(),
             coinSymbol = coin?.symbol ?: coinId.uppercase(Locale.US),
             coinImageUrl = coin?.imageUrl,
-            priceText = coin?.currentPrice?.let(MoneyFormat::usd),
+            priceText = coin?.currentPrice?.let { MoneyFormat.format(it, symbol) },
             changeText = coin?.let { MoneyFormat.percent(it.priceChangePercentage24h) },
             isPriceUp = (coin?.priceChangePercentage24h ?: 0.0) >= 0.0,
             amountInput = input,
             amountError = amountInputError(validation),
-            estimatedValueText = estimated?.let(MoneyFormat::usd),
+            estimatedValueText = estimated?.let { MoneyFormat.format(it, symbol) },
             isSaveEnabled = validation is AssetAmountValidation.Valid && !saving && !saved,
             isSaving = saving,
             isSaved = saved,

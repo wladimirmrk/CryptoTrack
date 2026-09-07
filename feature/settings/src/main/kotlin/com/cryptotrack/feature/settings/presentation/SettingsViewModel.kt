@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 /** Состояние экрана Settings (макет Settings): значения секции Preferences. */
@@ -21,7 +22,7 @@ data class SettingsUiState(
 
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
-    settingsRepository: SettingsRepository,
+    private val settingsRepository: SettingsRepository,
 ) : ViewModel() {
 
     val uiState: StateFlow<SettingsUiState> = settingsRepository.settings
@@ -37,4 +38,10 @@ class SettingsViewModel @Inject constructor(
             started = SharingStarted.WhileSubscribed(5_000),
             initialValue = SettingsUiState(),
         )
+
+    fun onCurrencySelect(currency: Currency) {
+        viewModelScope.launch {
+            settingsRepository.setCurrency(currency)
+        }
+    }
 }
