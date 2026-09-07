@@ -26,6 +26,7 @@ dependencies {
     implementation(project(":feature:search"))
     implementation(project(":feature:portfolio"))
     implementation(project(":feature:assetentry"))
+    implementation(project(":feature:settings"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.activity.compose)

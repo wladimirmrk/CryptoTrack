@@ -1,0 +1,18 @@
+<resources>
+    <string name="settings_title">Settings</string>
+    <string name="back_cd">Back</string>
+    <string name="preferences_section">Preferences</string>
+    <string name="system_section">System</string>
+    <string name="currency_title">Currency</string>
+    <string name="currency_subtitle">Base display currency</string>
+    <string name="currency_value">%1$s (%2$s)</string>
+    <string name="dark_mode_title">Dark Mode</string>
+    <string name="dark_mode_subtitle">Toggle app appearance</string>
+    <string name="refresh_interval_title">Refresh Interval</string>
+    <string name="refresh_interval_subtitle">Market data sync rate</string>
+    <string name="api_connection_title">API Connection</string>
+    <string name="api_connection_checking">Checking…</string>
+    <string name="about_title">About CryptoTrack</string>
+    <string name="about_subtitle">Terms, Privacy &amp; Licenses</string>
+    <string name="version_title">CryptoTrack Version</string>
+</resources>

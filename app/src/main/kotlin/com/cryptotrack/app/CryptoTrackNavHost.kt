@@ -25,6 +25,7 @@ import com.cryptotrack.feature.coindetails.navigation.coinDetailsGraph
 import com.cryptotrack.feature.favorites.navigation.favoritesGraph
 import com.cryptotrack.feature.portfolio.navigation.portfolioGraph
 import com.cryptotrack.feature.search.navigation.searchGraph
+import com.cryptotrack.feature.settings.navigation.settingsGraph
 import com.cryptotrack.feature.market.navigation.marketGraph
 import com.cryptotrack.core.navigation.PortfolioRoute
 import com.cryptotrack.core.navigation.SearchRoute
@@ -112,9 +113,7 @@ fun CryptoTrackNavHost(
                 onCoinClick = { coinId -> navController.navigate(CoinDetailsRoute(coinId)) },
                 onSettingsClick = { navController.navigate(SettingsRoute) },
             )
-            composable<SettingsRoute> {
-                PlaceholderScreen(title = "Settings", phaseHint = "Phase 9")
-            }
+            settingsGraph(onBack = { navController.popBackStack() })
             addAssetGraph(
                 onDismiss = { navController.popBackStack() },
                 onSaved = {
