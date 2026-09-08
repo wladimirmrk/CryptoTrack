@@ -35,12 +35,15 @@ data class MarketUiState(
     val showError: Boolean get() = error != null && coins.isEmpty()
 }
 
-internal fun Coin.toCoinUi(isFavorite: Boolean): CoinUi = CoinUi(
+internal fun Coin.toCoinUi(
+    isFavorite: Boolean,
+    currencySymbol: String,
+): CoinUi = CoinUi(
     coinId = id,
     name = name,
     symbol = symbol,
     imageUrl = imageUrl,
-    priceText = com.cryptotrack.core.common.format.MoneyFormat.usd(currentPrice),
+    priceText = com.cryptotrack.core.common.format.MoneyFormat.format(currentPrice, currencySymbol),
     changeText = com.cryptotrack.core.common.format.MoneyFormat.percent(priceChangePercentage24h),
     isUp = priceChangePercentage24h >= 0,
     isFavorite = isFavorite,

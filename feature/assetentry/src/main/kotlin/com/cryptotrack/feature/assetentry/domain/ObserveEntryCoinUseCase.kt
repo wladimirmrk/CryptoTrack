@@ -10,9 +10,15 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 
+/** Coin plus the display currency symbol the amount is denominated in. */
+data class EntryCoin(
+    val coin: Coin?,
+    val currencySymbol: String,
+)
+
 /**
  * Coin context for the Add and Edit forms: market data observed in the display currency
- * setting (offline-first, ADR-005). A null emission means the coin is not in the cached
+ * setting (offline-first, ADR-005). A null coin emission means the coin is not in the cached
  * market list — the forms keep working with a dash price placeholder.
  */
 class ObserveEntryCoinUseCase @Inject constructor(
@@ -20,10 +26,12 @@ class ObserveEntryCoinUseCase @Inject constructor(
     private val settingsRepository: SettingsRepository,
 ) {
     @OptIn(ExperimentalCoroutinesApi::class)
-    operator fun invoke(coinId: String): Flow<Coin?> = settingsRepository.settings
+    operator fun invoke(coinId: String): Flow<EntryCoin> = settingsRepository.settings
         .map { it.currency }
         .distinctUntilChanged()
         .flatMapLatest { currency ->
-            marketRepository.observeCoin(coinId, currency.apiCode)
+            marketRepository.observeCoin(coinId, currency.apiCode).map { coin ->
+                EntryCoin(coin = coin, currencySymbol = currency.symbol)
+            }
         }
 }

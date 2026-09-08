@@ -8,45 +8,50 @@ import java.util.Locale
 /**
  * Форматирование денег/процентов по спецификации дизайн-системы «Apex Finance»:
  * tabular figures, JetBrains Mono рендерится компонентом; здесь — только текст.
+ * Валюта передаётся символом (Currency.symbol из core:model — core:common не зависит
+ * от core:model); конвенции US-локали сохранены (макеты: «$12,450.00», «$1.24 Trillion»).
  */
 object MoneyFormat {
+    private const val DEFAULT_SYMBOL = "$"
     private const val TRILLION = 1_000_000_000_000.0
     private const val BILLION = 1_000_000_000.0
     private const val MILLION = 1_000_000.0
     private const val THOUSAND = 1_000.0
 
-    fun usd(
+    /** Сумма в валюте отображения: «$12,450.00», «€12,450.00»; микро-цены — «$0.0000012». */
+    fun format(
         amount: BigDecimal,
-        locale: Locale = Locale.US,
+        symbol: String = DEFAULT_SYMBOL,
     ): String {
         val value = amount.toDouble()
-        val currency = NumberFormat.getCurrencyInstance(locale)
+        val sign = if (value < 0) "-" else ""
+        val number = NumberFormat.getNumberInstance(Locale.US)
         return if (value != 0.0 && kotlin.math.abs(value) < 0.01) {
             // Микро-цены (BTT $0.0000012): значащие цифры без «группировки в ноль».
-            currency.maximumFractionDigits = 8
-            currency.minimumFractionDigits = 8
-            trimSeparators(currency.format(value), locale)
+            number.maximumFractionDigits = 8
+            number.minimumFractionDigits = 8
+            sign + symbol + trimSeparators(number.format(kotlin.math.abs(value)))
         } else {
-            currency.maximumFractionDigits = 2
-            currency.minimumFractionDigits = 2
-            currency.format(value)
+            number.maximumFractionDigits = 2
+            number.minimumFractionDigits = 2
+            sign + symbol + number.format(kotlin.math.abs(value))
         }
     }
 
     /** Компактный формат больших значений: "$1.24 Trillion", "$34.5B", "$8.4M" (макеты Coin Details). */
     fun compact(
         amount: BigDecimal,
-        locale: Locale = Locale.US,
+        symbol: String = DEFAULT_SYMBOL,
     ): String {
         val value = amount.toDouble()
         val abs = kotlin.math.abs(value)
-        val symbol = currencySymbol(locale)
+        val sign = if (value < 0) "-" else ""
         return when {
-            abs >= TRILLION -> "${symbol}${format(value / TRILLION, locale)} Trillion"
-            abs >= BILLION -> "${symbol}${format(value / BILLION, locale)}B"
-            abs >= MILLION -> "${symbol}${format(value / MILLION, locale)}M"
-            abs >= THOUSAND -> "${symbol}${format(value / THOUSAND, locale)}K"
-            else -> usd(amount, locale)
+            abs >= TRILLION -> "$sign$symbol${formatCompact(value / TRILLION)} Trillion"
+            abs >= BILLION -> "$sign$symbol${formatCompact(value / BILLION)}B"
+            abs >= MILLION -> "$sign$symbol${formatCompact(value / MILLION)}M"
+            abs >= THOUSAND -> "$sign$symbol${formatCompact(value / THOUSAND)}K"
+            else -> format(amount, symbol)
         }
     }
 
@@ -56,25 +61,16 @@ object MoneyFormat {
         return sign + "%.1f%%".format(Locale.US, change)
     }
 
-    private fun format(
-        value: Double,
-        locale: Locale,
-    ): String {
-        val nf = NumberFormat.getNumberInstance(locale)
+    private fun formatCompact(value: Double): String {
+        val nf = NumberFormat.getNumberInstance(Locale.US)
         nf.maximumFractionDigits = 2
         nf.minimumFractionDigits = 1
         nf.roundingMode = RoundingMode.HALF_UP
-        return nf.format(value)
+        return nf.format(kotlin.math.abs(value))
     }
 
-    private fun currencySymbol(locale: Locale): String =
-        NumberFormat.getCurrencyInstance(locale).currency?.getSymbol(locale) ?: "$"
-
-    private fun trimSeparators(
-        value: String,
-        locale: Locale,
-    ): String {
-        val symbols = java.text.DecimalFormatSymbols(locale)
+    private fun trimSeparators(value: String): String {
+        val symbols = java.text.DecimalFormatSymbols(Locale.US)
         return value.trimEnd('0').trimEnd(symbols.decimalSeparator, symbols.groupingSeparator)
     }
 }

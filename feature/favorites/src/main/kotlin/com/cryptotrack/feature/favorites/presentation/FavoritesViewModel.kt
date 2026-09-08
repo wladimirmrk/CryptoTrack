@@ -18,6 +18,7 @@ import javax.inject.Inject
 data class FavoritesUiState(
     val isLoading: Boolean = true,
     val coins: List<Coin> = emptyList(),
+    val currencySymbol: String = "",
 ) {
     val countText: String get() = "${coins.size} Assets"
     val isEmpty: Boolean get() = !isLoading && coins.isEmpty()
@@ -34,7 +35,7 @@ class FavoritesViewModel @Inject constructor(
         .map { it.currency }
         .flatMapLatest { currency ->
             favoritesRepository.observeFavorites(currency.apiCode).map { coins ->
-                FavoritesUiState(isLoading = false, coins = coins)
+                FavoritesUiState(isLoading = false, coins = coins, currencySymbol = currency.symbol)
             }
         }
         .stateIn(

@@ -99,6 +99,7 @@ class SearchViewModelTest {
         val viewModel = SearchViewModel(
             searchCoins = SearchCoinsUseCase(repository, FakeSettingsRepository()),
             favoritesRepository = FakeFavoritesRepository(),
+            settingsRepository = FakeSettingsRepository(),
         )
 
         viewModel.uiState.test {
@@ -119,6 +120,7 @@ class SearchViewModelTest {
         val viewModel = SearchViewModel(
             searchCoins = SearchCoinsUseCase(repository, FakeSettingsRepository()),
             favoritesRepository = FakeFavoritesRepository(),
+            settingsRepository = FakeSettingsRepository(),
         )
 
         viewModel.onQueryChange("   ")
@@ -141,6 +143,7 @@ class SearchViewModelTest {
         val viewModel = SearchViewModel(
             searchCoins = SearchCoinsUseCase(repository, FakeSettingsRepository()),
             favoritesRepository = FakeFavoritesRepository(),
+            settingsRepository = FakeSettingsRepository(),
         )
 
         viewModel.onQueryChange("bit")

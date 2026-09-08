@@ -1,0 +1,26 @@
+<resources>
+    <string name="settings_title">Settings</string>
+    <string name="back_cd">Back</string>
+    <string name="preferences_section">Preferences</string>
+    <string name="system_section">System</string>
+    <string name="currency_title">Currency</string>
+    <string name="currency_subtitle">Base display currency</string>
+    <string name="currency_value">%1$s (%2$s)</string>
+    <string name="dark_mode_title">Dark Mode</string>
+    <string name="dark_mode_subtitle">Toggle app appearance</string>
+    <string name="refresh_interval_title">Refresh Interval</string>
+    <string name="refresh_interval_subtitle">Market data sync rate</string>
+    <string name="api_connection_title">API Connection</string>
+    <string name="api_connection_checking">Checking…</string>
+    <string name="api_connection_connected">Connected (Latency: %1$dms)</string>
+    <string name="api_connection_unavailable">Unavailable</string>
+    <string name="about_title">About CryptoTrack</string>
+    <string name="about_subtitle">Terms, Privacy &amp; Licenses</string>
+    <string name="version_title">CryptoTrack Version</string>
+    <string name="topic_terms_title">Terms of Service</string>
+    <string name="topic_privacy_title">Privacy Policy</string>
+    <string name="topic_licenses_title">Licenses</string>
+    <string name="topic_terms_body">CryptoTrack is provided as-is for personal portfolio tracking. By using the app you agree to use it lawfully and at your own risk. This placeholder text will be replaced by the final document.</string>
+    <string name="topic_privacy_body">CryptoTrack stores your portfolio and settings locally on this device. We do not collect, transmit or share your personal data. This placeholder text will be replaced by the final document.</string>
+    <string name="topic_licenses_body">CryptoTrack is built with open-source libraries licensed under the Apache License 2.0 and other permissive licenses. The full list will be provided here.</string>
+</resources>

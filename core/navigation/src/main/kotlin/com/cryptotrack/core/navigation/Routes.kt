@@ -27,6 +27,20 @@ data object SearchRoute
 @Serializable
 data object SettingsRoute
 
+/** Разделы экрана About (макет не задаёт контент — статичные placeholder-экраны, допущение A-4). */
+@Serializable
+enum class AboutTopic {
+    Terms,
+    Privacy,
+    Licenses,
+}
+
+@Serializable
+data object AboutRoute
+
+@Serializable
+data class AboutTopicRoute(val topic: AboutTopic)
+
 @Serializable
 data class AddAssetRoute(val coinId: String)
 

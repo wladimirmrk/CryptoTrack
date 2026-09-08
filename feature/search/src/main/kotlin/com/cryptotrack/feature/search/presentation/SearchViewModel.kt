@@ -3,6 +3,7 @@ package com.cryptotrack.feature.search.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.cryptotrack.core.data.repository.FavoritesRepository
+import com.cryptotrack.core.data.repository.SettingsRepository
 import com.cryptotrack.core.model.Coin
 import com.cryptotrack.feature.search.domain.SearchState
 import com.cryptotrack.feature.search.domain.SearchCoinsUseCase
@@ -21,6 +22,7 @@ data class SearchUiState(
     val query: String = "",
     val isLoading: Boolean = false,
     val results: List<Coin> = emptyList(),
+    val currencySymbol: String = "",
     val isFavorite: (String) -> Boolean = { false },
 ) {
     val hasQuery: Boolean get() = query.isNotBlank()
@@ -31,6 +33,7 @@ data class SearchUiState(
 class SearchViewModel @Inject constructor(
     searchCoins: SearchCoinsUseCase,
     private val favoritesRepository: FavoritesRepository,
+    settingsRepository: SettingsRepository,
 ) : ViewModel() {
 
     private val queryFlow = MutableStateFlow("")
@@ -40,12 +43,14 @@ class SearchViewModel @Inject constructor(
         queryFlow,
         isLoading,
         favoritesRepository.observeFavoriteIds(),
+        settingsRepository.settings,
         searchCoins.observeSearchResults(queryFlow),
-    ) { query, loading, favoriteIds, state ->
+    ) { query, loading, favoriteIds, settings, state ->
         SearchUiState(
             query = query,
             isLoading = state is SearchState.Idle && loading,
             results = (state as? SearchState.Results)?.coins ?: emptyList(),
+            currencySymbol = settings.currency.symbol,
             isFavorite = { favoriteIds.contains(it) },
         )
     }.stateIn(

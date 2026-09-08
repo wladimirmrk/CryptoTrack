@@ -37,18 +37,18 @@ data class CoinDetailsUiState(
     val showError: Boolean get() = error != null && detailsMissing
 }
 
-internal fun CoinDetails.toUiState(): CoinDetailsUiState = CoinDetailsUiState(
+internal fun CoinDetails.toUiState(currencySymbol: String): CoinDetailsUiState = CoinDetailsUiState(
     name = name,
     symbol = symbol,
     imageUrl = imageUrl,
-    priceText = MoneyFormat.usd(currentPrice),
+    priceText = MoneyFormat.format(currentPrice, currencySymbol),
     changeText = MoneyFormat.percent(priceChangePercentage24h),
     isUp = priceChangePercentage24h >= 0,
-    marketCapText = marketCap?.let { MoneyFormat.compact(it) },
+    marketCapText = marketCap?.let { MoneyFormat.compact(it, currencySymbol) },
     marketCapRank = marketCapRank,
-    volumeText = totalVolume?.let { MoneyFormat.compact(it) },
-    supplyText = circulatingSupply?.let { "${MoneyFormat.compact(it)} $symbol" },
-    highText = high24h?.let { MoneyFormat.usd(it) },
-    lowText = low24h?.let { MoneyFormat.usd(it) },
+    volumeText = totalVolume?.let { MoneyFormat.compact(it, currencySymbol) },
+    supplyText = circulatingSupply?.let { "${MoneyFormat.compact(it, currencySymbol)} $symbol" },
+    highText = high24h?.let { MoneyFormat.format(it, currencySymbol) },
+    lowText = low24h?.let { MoneyFormat.format(it, currencySymbol) },
     about = description.takeIf { it.isNotBlank() },
 )

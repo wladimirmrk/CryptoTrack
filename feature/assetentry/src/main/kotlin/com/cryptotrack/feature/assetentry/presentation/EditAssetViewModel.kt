@@ -102,7 +102,9 @@ class EditAssetViewModel @Inject constructor(
         showDeleteConfirmation,
         isDeleting,
         isRemoved,
-    ) { (coin, input), status, confirmDelete, deleting, removed ->
+    ) { (entry, input), status, confirmDelete, deleting, removed ->
+        val coin = entry.coin
+        val symbol = entry.currencySymbol
         val validation = AssetAmountValidator.validate(input)
         val estimated = EstimatedValueCalculator.compute(
             estimatedAmount(validation),
@@ -114,12 +116,12 @@ class EditAssetViewModel @Inject constructor(
             coinName = coin?.name.orEmpty(),
             coinSymbol = coin?.symbol ?: coinId.uppercase(Locale.US),
             coinImageUrl = coin?.imageUrl,
-            currentPriceText = coin?.currentPrice?.let(MoneyFormat::usd),
+            currentPriceText = coin?.currentPrice?.let { MoneyFormat.format(it, symbol) },
             changeText = coin?.let { MoneyFormat.percent(it.priceChangePercentage24h) },
             isPriceUp = (coin?.priceChangePercentage24h ?: 0.0) >= 0.0,
             amountInput = input,
             amountError = amountInputError(validation),
-            estimatedValueText = estimated?.let(MoneyFormat::usd),
+            estimatedValueText = estimated?.let { MoneyFormat.format(it, symbol) },
             isSaveEnabled = validation is AssetAmountValidation.Valid &&
                 !status.isSaving && !status.isSaved && !deleting,
             isSaving = status.isSaving,

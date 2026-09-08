@@ -92,7 +92,10 @@ fun SearchScreen(
                 CoinListItem(
                     name = coin.name,
                     symbol = coin.symbol,
-                    priceText = com.cryptotrack.core.common.format.MoneyFormat.usd(coin.currentPrice),
+                    priceText = com.cryptotrack.core.common.format.MoneyFormat.format(
+                        coin.currentPrice,
+                        state.currencySymbol,
+                    ),
                     changeText = com.cryptotrack.core.common.format.MoneyFormat.percent(coin.priceChangePercentage24h),
                     isUp = coin.priceChangePercentage24h >= 0,
                     imageUrl = coin.imageUrl,

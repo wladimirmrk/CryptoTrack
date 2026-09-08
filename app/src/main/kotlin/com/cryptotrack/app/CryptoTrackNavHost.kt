@@ -14,6 +14,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
+import com.cryptotrack.core.navigation.AboutRoute
+import com.cryptotrack.core.navigation.AboutTopicRoute
 import com.cryptotrack.core.navigation.AddAssetRoute
 import com.cryptotrack.core.navigation.CoinDetailsRoute
 import com.cryptotrack.core.navigation.EditAssetRoute
@@ -25,6 +27,7 @@ import com.cryptotrack.feature.coindetails.navigation.coinDetailsGraph
 import com.cryptotrack.feature.favorites.navigation.favoritesGraph
 import com.cryptotrack.feature.portfolio.navigation.portfolioGraph
 import com.cryptotrack.feature.search.navigation.searchGraph
+import com.cryptotrack.feature.settings.navigation.settingsGraph
 import com.cryptotrack.feature.market.navigation.marketGraph
 import com.cryptotrack.core.navigation.PortfolioRoute
 import com.cryptotrack.core.navigation.SearchRoute
@@ -112,9 +115,11 @@ fun CryptoTrackNavHost(
                 onCoinClick = { coinId -> navController.navigate(CoinDetailsRoute(coinId)) },
                 onSettingsClick = { navController.navigate(SettingsRoute) },
             )
-            composable<SettingsRoute> {
-                PlaceholderScreen(title = "Settings", phaseHint = "Phase 9")
-            }
+            settingsGraph(
+                onBack = { navController.popBackStack() },
+                onAboutClick = { navController.navigate(AboutRoute) },
+                onAboutTopicClick = { topic -> navController.navigate(AboutTopicRoute(topic)) },
+            )
             addAssetGraph(
                 onDismiss = { navController.popBackStack() },
                 onSaved = {

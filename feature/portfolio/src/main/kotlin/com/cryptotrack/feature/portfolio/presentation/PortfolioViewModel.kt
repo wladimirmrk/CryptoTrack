@@ -61,11 +61,12 @@ class PortfolioViewModel @Inject constructor(
         refreshError,
     ) { snapshot, refreshing, error ->
         val summary = snapshot.summary
+        val symbol = snapshot.currencySymbol
         PortfolioUiState(
             isLoading = snapshot.positions.isEmpty() && snapshot.lastUpdatedMillis == null &&
                 error == null && refreshing,
-            totalBalanceText = com.cryptotrack.core.common.format.MoneyFormat.usd(summary.totalBalanceUsd),
-            change24hText = com.cryptotrack.core.common.format.MoneyFormat.usd(summary.change24hUsd) +
+            totalBalanceText = com.cryptotrack.core.common.format.MoneyFormat.format(summary.totalBalanceUsd, symbol),
+            change24hText = com.cryptotrack.core.common.format.MoneyFormat.format(summary.change24hUsd, symbol) +
                 " (" + com.cryptotrack.core.common.format.MoneyFormat.percent(summary.change24hPercent) + ")",
             isUp = summary.change24hUsd.signum() >= 0,
             allocations = summary.allocations.map { AllocationUi(it.coinId, it.symbol, it.percent) },
@@ -76,7 +77,7 @@ class PortfolioViewModel @Inject constructor(
                     symbol = position.coin.symbol,
                     imageUrl = position.coin.imageUrl,
                     amountText = "${position.amount.toPlainString()} ${position.coin.symbol}",
-                    valueText = com.cryptotrack.core.common.format.MoneyFormat.usd(position.valueUsd),
+                    valueText = com.cryptotrack.core.common.format.MoneyFormat.format(position.valueUsd, symbol),
                     changeText = com.cryptotrack.core.common.format.MoneyFormat.percent(
                         position.coin.priceChangePercentage24h,
                     ),

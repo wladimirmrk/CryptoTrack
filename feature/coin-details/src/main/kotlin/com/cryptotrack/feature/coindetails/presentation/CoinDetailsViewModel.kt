@@ -61,7 +61,8 @@ class CoinDetailsViewModel @Inject constructor(
     }
 
     val uiState: StateFlow<CoinDetailsUiState> = combine(dataFlow, statusFlow) { (snapshot, points), status ->
-        val base = (snapshot.details?.toUiState() ?: CoinDetailsUiState()).copy(coinId = coinId)
+        val base = (snapshot.details?.toUiState(snapshot.currencySymbol) ?: CoinDetailsUiState())
+            .copy(coinId = coinId)
         base.copy(
             isLoading = base.detailsMissing && snapshot.lastUpdatedMillis == null &&
                 status.error == null && status.isRefreshing,
