@@ -33,4 +33,7 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.hilt.navigation.compose)
     implementation(libs.androidx.compose.material.icons.extended)
+
+    testImplementation(libs.junit4)
+    testImplementation(libs.konsist)
 }
