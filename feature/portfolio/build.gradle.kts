@@ -20,4 +20,11 @@ dependencies {
     testImplementation(libs.truth)
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.turbine)
+
+    androidTestImplementation(libs.junit4)
+    androidTestImplementation(libs.androidx.test.runner)
+    androidTestImplementation(libs.androidx.test.rules)
+    androidTestImplementation(libs.androidx.test.ext.junit)
+    androidTestImplementation(libs.androidx.compose.ui.test.junit4)
+    androidTestDebugImplementation(libs.androidx.compose.ui.test.manifest)
 }
