@@ -1,6 +1,5 @@
 package com.cryptotrack.core.data
 
-import com.cryptotrack.core.common.coroutines.DispatchersProvider
 import com.cryptotrack.core.common.result.AppError
 import com.cryptotrack.core.common.result.Result
 import com.cryptotrack.core.data.database.entity.MarketCoinEntity
@@ -14,7 +13,6 @@ import com.cryptotrack.core.network.source.MarketRemoteDataSource
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
 import java.math.BigDecimal
@@ -44,13 +42,6 @@ private class FakeRemote : MarketRemoteDataSource {
     override suspend fun search(query: String) = searchResult
 
     override suspend fun ping(): Result<Long> = Result.Success(42L)
-}
-
-private class FakeDispatchers : DispatchersProvider {
-    private val dispatcher = UnconfinedTestDispatcher()
-    override val io: CoroutineDispatcher = dispatcher
-    override val default: CoroutineDispatcher = dispatcher
-    override val main: CoroutineDispatcher = dispatcher
 }
 
 class MarketRepositoryImplTest {
