@@ -14,6 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.cryptotrack.core.designsystem.theme.NumericTextStyle
+import com.cryptotrack.core.designsystem.theme.apexExtra
 
 /** Карточка Level 1: белая заливка на светлом фоне, радиус 16, мягкая граница. */
 @Composable
@@ -25,7 +26,7 @@ fun ApexCard(
         modifier = modifier,
         shape = MaterialTheme.shapes.large,
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceContainerLowest,
+            containerColor = MaterialTheme.colorScheme.apexExtra.cardContainer,
         ),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
     ) {

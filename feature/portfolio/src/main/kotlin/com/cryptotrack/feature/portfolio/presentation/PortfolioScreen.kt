@@ -40,6 +40,7 @@ import com.cryptotrack.core.designsystem.component.ErrorState
 import com.cryptotrack.core.designsystem.component.OfflineBanner
 import com.cryptotrack.core.designsystem.component.SectionHeader
 import com.cryptotrack.core.designsystem.component.SkeletonBox
+import com.cryptotrack.core.designsystem.theme.apexExtra
 import com.cryptotrack.core.designsystem.theme.priceColors
 import com.cryptotrack.feature.portfolio.R
 import java.util.Locale
@@ -283,6 +284,6 @@ private const val SKELETON_ASSET_ROWS = 4
 
 @Composable
 private fun Modifier.backgroundDonut(index: Int): Modifier {
-    val colors = com.cryptotrack.feature.portfolio.presentation.donutColors
+    val colors = MaterialTheme.colorScheme.apexExtra.donutSegments
     return this.background(colors[index % colors.size], MaterialTheme.shapes.extraSmall)
 }

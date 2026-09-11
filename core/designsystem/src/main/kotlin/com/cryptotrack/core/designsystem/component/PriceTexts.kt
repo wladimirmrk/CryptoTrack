@@ -59,11 +59,7 @@ fun ChangeBadge(
     modifier: Modifier = Modifier,
 ) {
     val colors = MaterialTheme.colorScheme.priceColors
-    val container = if (isUp) {
-        MaterialTheme.colorScheme.secondaryContainer
-    } else {
-        MaterialTheme.colorScheme.errorContainer
-    }
+    val container = if (isUp) colors.upContainer else colors.downContainer
     Row(
         modifier = modifier
             .background(container, MaterialTheme.shapes.small)
