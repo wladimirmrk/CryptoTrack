@@ -18,7 +18,9 @@ internal fun VersionCatalog.library(alias: String) =
 internal fun Project.configureDetekt() {
     extensions.configure<DetektExtension> {
         buildUponDefaultConfig = true
-        autoCorrect = true
+        // A quality gate must fail, not rewrite sources: auto-correct silently
+        // mutated files (and the embedded ktlint ruleset misfires on Kotlin 2.3).
+        autoCorrect = false
         config.setFrom(rootProject.files("config/detekt/detekt.yml"))
     }
 }

@@ -33,5 +33,42 @@ naming:
     ignoreAnnotated:
       - Serializable # DTO зеркалят JSON-поля API (snake_case)
 
+# Phase 11: форматтер-правила включены точечно (ktlint-плагин в проект не заводим —
+# стандарт качества detekt+lint; правила ktlint-семейства детектируются detekt-formatting).
 formatting:
-  active: false # форматтер-источник — ktlint CLI 1.8 (верификация добавится в Phase 11); встроенный ktlint detekt 1.23.8 старее и расходится
+  active: true
+  # Обёртки/отступы — контекст Compose-кода, остаются вне гейта:
+  ArgumentListWrapping:
+    active: false
+  Indentation:
+    active: false
+  MaximumLineLength:
+    active: false # MaxLineLength в style (120) покрывает
+  ParameterListWrapping:
+    active: false
+  PropertyWrapping:
+    active: false
+  AnnotationOnSeparateLine:
+    active: false
+  AnnotationSpacing:
+    active: false
+  ChainWrapping:
+    active: false
+  CommentSpacing:
+    active: false
+  Filename:
+    active: false
+  ImportOrdering:
+    active: false
+  MultiLineIfElse:
+    active: false
+  NoLineBreakAfterElse:
+    active: false
+  NoLineBreakBeforeAssignment:
+    active: false
+  UnnecessaryParentheses:
+    active: false
+  # Ложные срабатывания на Kotlin 2.3: встроенный в detekt 1.23.8 ktlint старее
+  # и помечает реально используемые импорты (проверено на кодовой базе 2026-09).
+  NoUnusedImports:
+    active: false

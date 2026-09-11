@@ -9,7 +9,6 @@ import com.cryptotrack.feature.search.domain.SearchState
 import com.cryptotrack.feature.search.domain.SearchCoinsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
-import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow

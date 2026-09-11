@@ -6,7 +6,6 @@ import com.cryptotrack.core.model.PortfolioPosition
 import com.cryptotrack.core.model.PortfolioSummary
 import java.math.BigDecimal
 import java.math.MathContext
-import javax.inject.Inject
 
 /** Чистая арифметика портфеля — приоритет юнит-тестов (Phase 7, development-plan). */
 object PortfolioCalculator {
