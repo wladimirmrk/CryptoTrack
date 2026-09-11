@@ -1,8 +1,25 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.cryptotrack.android.application)
     alias(libs.plugins.cryptotrack.android.compose)
     alias(libs.plugins.cryptotrack.android.hilt)
 }
+
+// Release signing is opt-in and machine-local: properties in git-ignored
+// local.properties (release.storeFile / release.storePassword / release.keyAlias /
+// release.keyPassword). Without them the release build stays unsigned, and no
+// secrets ever reach the repository.
+val releaseSigningProperties = Properties().apply {
+    val file = rootProject.file("local.properties")
+    if (file.exists()) file.inputStream().use { load(it) }
+}
+val releaseStoreFile: String? = releaseSigningProperties.getProperty("release.storeFile")
+val releaseStorePassword: String? = releaseSigningProperties.getProperty("release.storePassword")
+val releaseKeyAlias: String? = releaseSigningProperties.getProperty("release.keyAlias")
+val releaseKeyPassword: String? = releaseSigningProperties.getProperty("release.keyPassword")
+val hasReleaseSigning =
+    listOf(releaseStoreFile, releaseStorePassword, releaseKeyAlias, releaseKeyPassword).all { !it.isNullOrBlank() }
 
 android {
     namespace = "com.cryptotrack.app"
@@ -12,6 +29,24 @@ android {
         versionCode = 1
         versionName = "0.1.0"
         testInstrumentationRunner = "com.cryptotrack.app.HiltTestRunner"
+    }
+
+    signingConfigs {
+        if (hasReleaseSigning) {
+            create("release") {
+                // Absolute paths pass through unchanged; relative resolve against the root project.
+                storeFile = rootProject.file(releaseStoreFile!!)
+                storePassword = releaseStorePassword
+                keyAlias = releaseKeyAlias
+                keyPassword = releaseKeyPassword
+            }
+        }
+    }
+
+    buildTypes {
+        release {
+            signingConfigs.findByName("release")?.let { signingConfig = it }
+        }
     }
 }
 
