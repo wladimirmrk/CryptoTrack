@@ -88,27 +88,76 @@ private val ApexDarkColors = darkColorScheme(
     surfaceContainerHighest = Color(0xFF34353D),
 )
 
-/** Дополнительные семантические цвета движения цены (допущение A-11). */
+/** Additional semantic colors of price movement (assumption A-11). */
 @Immutable
 data class ApexPriceColors(
     val up: Color,
     val down: Color,
+    // Badge/containers behind price-change texts (A-11 success container; dark derived).
+    val upContainer: Color,
+    val downContainer: Color,
 )
 
 private val LightPriceColors = ApexPriceColors(
     up = Color(0xFF15803D),
     down = Color(0xFFBA1A1A),
+    upContainer = Color(0xFFDCFCE7),
+    downContainer = Color(0xFFFFDAD6),
 )
 
 private val DarkPriceColors = ApexPriceColors(
     up = Color(0xFF7AD18F),
     down = Color(0xFFFFB4AB),
+    upContainer = Color(0xFF1B4A2E),
+    downContainer = Color(0xFF93000A),
 )
 
 val LocalApexPriceColors = staticCompositionLocalOf { LightPriceColors }
 
 val ColorScheme.priceColors: ApexPriceColors
     @Composable get() = LocalApexPriceColors.current
+
+/**
+ * Extended tokens without an M3 counterpart (Phase 11 dark-theme revision, ADR-012):
+ * card fill of Level-1 cards and the allocation donut segment palette.
+ */
+@Immutable
+data class ApexExtraColors(
+    val cardContainer: Color,
+    val donutSegments: List<Color>,
+)
+
+// Light donut palette: brand blues + secondary gray + burnt orange (Portfolio Overview mockup).
+private val LightExtraColors = ApexExtraColors(
+    cardContainer = Color(0xFFFFFFFF), // design §1.4: white card fill on light
+    donutSegments = listOf(
+        Color(0xFF0052FF),
+        Color(0xFF003EC7),
+        Color(0xFF7B9BFF),
+        Color(0xFF505F76),
+        Color(0xFFB7C4FF),
+        Color(0xFF952200),
+    ),
+)
+
+// Dark: lightened tints of the same hues, ordered bright/mid alternating so the
+// neighbouring segments stay distinguishable on the near-black background.
+private val DarkExtraColors = ApexExtraColors(
+    cardContainer = Color(0xFF1A1B23), // one tonal step above background
+    donutSegments = listOf(
+        Color(0xFF7B9BFF),
+        Color(0xFF9AA8C7),
+        Color(0xFF4D8CFF),
+        Color(0xFFE08D5A),
+        Color(0xFFB7C4FF),
+        Color(0xFFFFB59A),
+    ),
+)
+
+val LocalApexExtraColors = staticCompositionLocalOf { LightExtraColors }
+
+val ColorScheme.apexExtra: ApexExtraColors
+    @Composable get() = LocalApexExtraColors.current
 
 @Composable
 fun CryptoTrackTheme(
@@ -122,6 +171,7 @@ fun CryptoTrackTheme(
     ) {
         CompositionLocalProvider(
             LocalApexPriceColors provides if (darkTheme) DarkPriceColors else LightPriceColors,
+            LocalApexExtraColors provides if (darkTheme) DarkExtraColors else LightExtraColors,
             content = content,
         )
     }

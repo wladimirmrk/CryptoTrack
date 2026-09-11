@@ -214,7 +214,9 @@ private fun EstimatedValueBlock(valueText: String?) {
         modifier = Modifier
             .fillMaxWidth()
             .padding(top = 16.dp)
-            .background(MaterialTheme.colorScheme.surfaceContainerLow, MaterialTheme.shapes.large)
+            // surfaceContainerHigh: the sheet itself is surfaceContainerLow, so the
+            // block would be invisible at the same tonal level (dark-theme review).
+            .background(MaterialTheme.colorScheme.surfaceContainerHigh, MaterialTheme.shapes.large)
             .padding(16.dp),
     ) {
         Text(

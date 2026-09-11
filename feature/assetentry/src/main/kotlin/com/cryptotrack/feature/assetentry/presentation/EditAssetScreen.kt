@@ -217,7 +217,8 @@ private fun TotalValuePreviewBlock(valueText: String?) {
         modifier = Modifier
             .fillMaxWidth()
             .padding(top = 16.dp)
-            .background(MaterialTheme.colorScheme.surfaceContainerLow, MaterialTheme.shapes.large)
+            // Matches the Add Asset block (surfaceContainerHigh) for consistency.
+            .background(MaterialTheme.colorScheme.surfaceContainerHigh, MaterialTheme.shapes.large)
             .padding(16.dp),
     ) {
         Text(
