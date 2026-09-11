@@ -31,7 +31,11 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
             buildTypes {
                 release {
                     isMinifyEnabled = true
-                    proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"))
+                    proguardFiles(
+                        getDefaultProguardFile("proguard-android-optimize.txt"),
+                        // Resolved against the applying module (:app is the only application).
+                        "proguard-rules.pro",
+                    )
                 }
             }
         }
