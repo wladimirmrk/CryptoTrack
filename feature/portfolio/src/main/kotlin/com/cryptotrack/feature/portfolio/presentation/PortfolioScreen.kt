@@ -1,5 +1,6 @@
 package com.cryptotrack.feature.portfolio.presentation
 
+import androidx.annotation.VisibleForTesting
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -97,7 +98,8 @@ private fun PortfolioTopBar(onSearchClick: () -> Unit) {
 }
 
 @Composable
-private fun PortfolioContent(
+@VisibleForTesting
+internal fun PortfolioContent(
     state: PortfolioUiState,
     onAssetClick: (String) -> Unit,
 ) {
@@ -189,7 +191,8 @@ private fun PortfolioContent(
 
 /** Empty Portfolio (макет): центрированный блок, «Add First Asset», ссылка «How to fund» (A-4). */
 @Composable
-private fun PortfolioEmptyState(
+@VisibleForTesting
+internal fun PortfolioEmptyState(
     onAddFirstAsset: () -> Unit,
     onHowToFund: () -> Unit,
 ) {
@@ -229,7 +232,8 @@ private fun PortfolioEmptyState(
 
 /** Skeleton экрана (макет Loading State): каркас Portfolio + пульсирующие блоки вместо данных. */
 @Composable
-private fun PortfolioSkeleton() {
+@VisibleForTesting
+internal fun PortfolioSkeleton() {
     Column(modifier = Modifier.fillMaxSize()) {
         ApexCard(modifier = Modifier.padding(horizontal = 16.dp)) {
             Column(modifier = Modifier.padding(16.dp)) {

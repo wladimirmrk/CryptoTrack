@@ -14,9 +14,19 @@ import com.cryptotrack.core.data.database.entity.FavoriteEntity
 import com.cryptotrack.core.data.database.entity.HoldingEntity
 import com.cryptotrack.core.data.database.entity.MarketCoinEntity
 import com.cryptotrack.core.data.database.entity.PriceHistoryEntity
+import com.cryptotrack.core.common.coroutines.DispatchersProvider
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
+
+internal class FakeDispatchers : DispatchersProvider {
+    private val dispatcher = UnconfinedTestDispatcher()
+    override val io: CoroutineDispatcher = dispatcher
+    override val default: CoroutineDispatcher = dispatcher
+    override val main: CoroutineDispatcher = dispatcher
+}
 
 internal class FakeTimeProvider(
     var now: Long = 1_000L,

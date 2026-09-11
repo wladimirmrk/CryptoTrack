@@ -1,5 +1,6 @@
 package com.cryptotrack.feature.market.presentation
 
+import androidx.annotation.VisibleForTesting
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -76,11 +77,12 @@ fun MarketScreen(
             onFiltersClick = { showFilters = true },
         )
 
-        when {
-            state.isLoading -> MarketSkeleton()
-            state.showError -> ErrorState(onRetry = { viewModel.onRefresh(force = true) })
-            else -> MarketList(state = state, onCoinClick = onCoinClick, onFavoriteToggle = viewModel::onFavoriteToggle)
-        }
+        MarketStateContent(
+            state = state,
+            onCoinClick = onCoinClick,
+            onFavoriteToggle = viewModel::onFavoriteToggle,
+            onRetry = { viewModel.onRefresh(force = true) },
+        )
     }
 
     if (showFilters) {
@@ -160,8 +162,25 @@ private fun MarketToolbar(
     }
 }
 
+/** State branches of the Market Home body (extracted for VM-free UI tests). */
 @Composable
-private fun MarketList(
+@VisibleForTesting
+internal fun MarketStateContent(
+    state: MarketUiState,
+    onCoinClick: (String) -> Unit,
+    onFavoriteToggle: (String, Boolean) -> Unit,
+    onRetry: () -> Unit,
+) {
+    when {
+        state.isLoading -> MarketSkeleton()
+        state.showError -> ErrorState(onRetry = onRetry)
+        else -> MarketList(state = state, onCoinClick = onCoinClick, onFavoriteToggle = onFavoriteToggle)
+    }
+}
+
+@Composable
+@VisibleForTesting
+internal fun MarketList(
     state: MarketUiState,
     onCoinClick: (String) -> Unit,
     onFavoriteToggle: (String, Boolean) -> Unit,

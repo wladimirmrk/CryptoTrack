@@ -1,5 +1,6 @@
 package com.cryptotrack.feature.assetentry.presentation
 
+import androidx.annotation.VisibleForTesting
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -73,7 +74,8 @@ fun AddAssetSheet(
 }
 
 @Composable
-private fun AddAssetForm(
+@VisibleForTesting
+internal fun AddAssetForm(
     state: AddAssetUiState,
     onAmountChange: (String) -> Unit,
     onSave: () -> Unit,
