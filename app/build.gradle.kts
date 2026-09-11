@@ -11,6 +11,7 @@ android {
         applicationId = "com.cryptotrack.app"
         versionCode = 1
         versionName = "0.1.0"
+        testInstrumentationRunner = "com.cryptotrack.app.HiltTestRunner"
     }
 }
 
@@ -36,4 +37,20 @@ dependencies {
 
     testImplementation(libs.junit4)
     testImplementation(libs.konsist)
+
+    androidTestImplementation(libs.junit4)
+    // Version-less compose test artifacts resolve through the BOM (ComposeConventionPlugin
+    // wires the platform only into implementation configurations).
+    androidTestImplementation(platform(libs.androidx.compose.bom))
+    androidTestImplementation(libs.androidx.test.runner)
+    androidTestImplementation(libs.androidx.test.rules)
+    androidTestImplementation(libs.androidx.test.ext.junit)
+    androidTestImplementation(libs.androidx.compose.ui.test.junit4)
+    androidTestImplementation(libs.hilt.android.testing)
+    kspAndroidTest(libs.hilt.compiler)
+    // Empty test activity must live in the app's debug manifest: merged into the
+    // androidTest apk instead, its process name (applicationId+.test) fails
+    // InstrumentationActivityInvoker's same-process guard on launch.
+    debugImplementation(libs.androidx.compose.ui.test.manifest)
+    androidTestImplementation(libs.androidx.navigation.testing)
 }
