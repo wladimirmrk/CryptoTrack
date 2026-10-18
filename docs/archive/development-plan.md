@@ -1,4 +1,12 @@
-# Development Plan — CryptoTrack
+# [ARCHIVED] Development Plan — CryptoTrack
+
+> [!NOTE]
+> **Архивный исторический документ.**
+> Этот план описывал пошаговый процесс автономной разработки проекта с Phase 0 по Phase 12.
+> Все 12 фаз были успешно завершены и влиты в ветку `main`.
+> Для актуальной архитектуры и документации используйте [docs/README.md](../README.md).
+
+---
 
 План автономной разработки по фазам. Каждая фаза = отдельная Git-ветка (см. AGENTS.md §Git).
 Переход к следующей фазе — только после DoD текущей, зелёных проверок и merge в `main`.
@@ -37,7 +45,7 @@
 1. `:core:common` — `Result`, `AppError`, `DispatchersProvider`, `TimeProvider`, `Logger`, `ConnectivityMonitor`, форматтеры (+ unit-тесты форматтеров).
 2. `:core:model` — доменные модели (по design-analysis §6).
 3. `:core:network` — Retrofit/OkHttp/serialization, `CoinGeckoApi` (markets, coin, market_chart, search, ping), DTO→model мапперы (+ тесты), `AppError`-маппинг, `MarketRemoteDataSource` impl, таймауты/interceptors, BuildConfig-ключ.
-4. `:core:database` — Room: `holding_entity`, `favorite_entity`, `market_coin_entity`, `coin_details_entity`, `price_history_entity`, `cache_meta` + DAO (+ in-memory тест DAO опционально).
+4. `:core:database` — Room: `holding_entity`, `favorite_entity`, `market_coin_entity`, `coin_details_entity`, `price_history_entity`, `cache_meta` + DAO (+ in-memory тест DAO опционально). *(Примечание: в ходе фазы 2 модуль был объединен с `:core:data` по ADR-016).*
 5. `:core:datastore` — настройки (currency, dark mode, refresh interval).
 6. `:core:data` — репозитории offline-first (+ тесты: кэш→сеть, TTL, offline, rate limit) + Hilt-биндинги.
 7. `:core:designsystem` — тема «Apex Finance» (цвета §1.2, типографика §1.3, формы/отступы §1.4) + компоненты из design-analysis §5 (+ скриншот-тесты не обязательны, Compose-тест наличия).

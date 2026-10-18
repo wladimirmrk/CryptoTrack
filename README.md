@@ -91,8 +91,14 @@ CI: GitHub Actions (`.github/workflows/build.yml`) выполняет тот ж�
 
 ## Документация
 
-- `docs/architecture.md` — архитектура и правила зависимостей
-- `docs/modules.md` — живой реестр модулей
+Полный навигационный индекс и база знаний: [`docs/README.md`](docs/README.md).
+
+- `docs/architecture.md` — архитектура, MVI-lite и правила зависимостей
+- `docs/modules.md` — реестр модулей проекта
+- `docs/data-layer.md` — offline-first, кэш Room, TTL и интеграция с CoinGecko API
+- `docs/domain-logic.md` — расчёты портфеля, PNL, аллокация и холдинги
 - `docs/design-analysis.md` — разбор дизайн-макетов (Stitch, «Apex Finance»)
-- `docs/development-plan.md` — план разработки по фазам
+- `docs/testing.md` — архитектура тестов (Konsist, Turbine, TestFakes)
+- `docs/development-guide.md` — руководство по добавлению экранов, сущностей и эндпоинтов
 - `docs/decisions/` — архитектурные решения (ADR-001…ADR-018)
+- `docs/archive/` — исторические планы и отчёты о приёмке

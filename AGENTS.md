@@ -27,9 +27,9 @@
 ```
 app/                 Activity, NavHost, bottom bar, Splash, Konsist-тесты
 build-logic/         convention plugins
-core/common|model|network|database|datastore|data|designsystem|navigation
+core/common|model|network|data (вкл. Room по ADR-016)|datastore|designsystem|navigation
 feature/market|portfolio|favorites|coin-details|search|assetentry|settings
-docs/                архитектура, модули, дизайн-анализ, план, ADR
+docs/                архитектура, модули, дизайн-анализ, ADR, база знаний
 ```
 
 Правила зависимостей — `docs/architecture.md` §3 (запрещено: feature→feature, core→feature,

@@ -17,7 +17,7 @@
 |---|---|---|
 | `presentation` | ViewModel (Hilt), `UiState`, Compose-экраны, локальные компоненты | domain-интерфейсы, core:designsystem/model/common/data |
 | `domain` | use cases, фичевые модели-параметры (фильтры и т.п.), фичевые интерфейсы (если появятся) | чистый Kotlin + core:model/core:common; **без Android-классов** |
-| `data` | фичеспецифичные источники/мапперы (по необходимости) | core:data/network/database |
+| `data` | фичеспецифичные источники/мапперы (по необходимости) | core:data, core:network (Room живёт внутри `:core:data`, ADR-016) |
 
 Типовой flow:
 

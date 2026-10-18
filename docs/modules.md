@@ -5,24 +5,24 @@
 
 ## 1. Реестр
 
-| Модуль | Назначение | Зависится от | Фаза |
-|---|---|---|---|
-| `:app` | Единственная Activity, NavHost, bottom bar, Splash, сборка DI-графа, Konsist-тесты архитектуры | все `feature:*`, `core:designsystem`, `core:navigation`, `core:data`, `core:model` | 1 |
-| `build-logic` (included build) | Convention plugins: общая конфигурация Android/Kotlin/Compose/Hilt/Room, `crypto.feature` | — (Gradle) | 1 |
-| `:core:common` | `Result<T, AppError>`, `DispatchersProvider`, `TimeProvider`, `Logger`, `ConnectivityMonitor` (интерфейсы), форматтеры денег/процентов | — | 2 |
-| `:core:model` | Кросс-фичевые доменные модели: `Coin`, `CoinDetails`, `PricePoint`, `Holding`, `Favorite`, `AppSettings`, `Currency`, `MarketFilter` | — | 2 |
-| `:core:network` | OkHttp/Retrofit, `CoinGeckoApi`, DTO + мапперы в model, маппинг ошибок (`safeApiCall`), `AuthInterceptor`, health-check, `MarketRemoteDataSource` (интерфейс) + CoinGecko impl | `core:common`, `core:model` | 2 |
-| `:core:datastore` | DataStore Preferences: currency, dark mode, refresh interval | `core:common` | 2 |
-| `:core:data` | Репозитории (интерфейс+impl) и offline-first оркестрация: `MarketRepository`, `FavoritesRepository`, `PortfolioRepository`, `SettingsRepository`; Room-кэш (entities/DAOs/Database) в пакете `database/` (ADR-016) | `core:network`, `core:datastore`, `core:model`, `core:common` | 2 |
-| `:core:designsystem` | Тема/токены «Apex Finance» (light-палитра из design.md + generated dark, Inter + JetBrains Mono variable), компоненты: ApexButton, ApexCard, CoinListItem, CoinIcon, PriceText/ChangeText/ChangeBadge, StatTile, Sparkline, Skeleton, EmptyState, ErrorState, OfflineBanner, ApexSearchBar, SectionHeader | `core:common` | 2 |
-| `:core:navigation` | Type-safe маршруты (`@Serializable`), контракты `NavGraphBuilder.xxxGraph` | `core:model` | 2 |
-| `:feature:market` | Market Home, фильтры (шит), состояния loading/error/empty/offline | designsystem, navigation, model, common, data | 4 |
-| `:feature:coin-details` | Детали коина: график (Vico), таймфреймы, Market Stats, About | те же | 5 |
-| `:feature:favorites` | Favorites + Empty Favorites | те же | 6 |
-| `:feature:search` | Поиск + вход в Settings (иконка в хедере — единственный, ADR-009) | те же | 6 |
-| `:feature:portfolio` | Portfolio Overview (баланс, аллокация, активы) + Empty Portfolio | те же | 7 |
-| `:feature:assetentry` | Add to Portfolio (шит), Edit Asset, Delete Confirmation (диалог) | те же | 8 |
-| `:feature:settings` | Настройки: currency, dark mode, refresh interval, API status, about | те же | 9 |
+| Модуль | Назначение | Зависится от | Фаза | Статус |
+|---|---|---|---|---|
+| `:app` | Единственная Activity, NavHost, bottom bar, Splash, сборка DI-графа, Konsist-тесты архитектуры | все `feature:*`, `core:designsystem`, `core:navigation`, `core:data`, `core:model` | 1 | ✅ Реализован |
+| `build-logic` (included build) | Convention plugins: общая конфигурация Android/Kotlin/Compose/Hilt/Room, `crypto.feature` | — (Gradle) | 1 | ✅ Реализован |
+| `:core:common` | `Result<T, AppError>`, `DispatchersProvider`, `TimeProvider`, `Logger`, `ConnectivityMonitor` (интерфейсы), форматтеры денег/процентов | — | 2 | ✅ Реализован |
+| `:core:model` | Кросс-фичевые доменные модели: `Coin`, `CoinDetails`, `PricePoint`, `Holding`, `Favorite`, `AppSettings`, `Currency`, `MarketFilter` | — | 2 | ✅ Реализован |
+| `:core:network` | OkHttp/Retrofit, `CoinGeckoApi`, DTO + мапперы в model, маппинг ошибок (`safeApiCall`), `AuthInterceptor`, health-check, `MarketRemoteDataSource` (интерфейс) + CoinGecko impl | `core:common`, `core:model` | 2 | ✅ Реализован |
+| `:core:datastore` | DataStore Preferences: currency, dark mode, refresh interval | `core:common` | 2 | ✅ Реализован |
+| `:core:data` | Репозитории (интерфейс+impl) и offline-first оркестрация: `MarketRepository`, `FavoritesRepository`, `PortfolioRepository`, `SettingsRepository`; Room-кэш (entities/DAOs/Database) в пакете `database/` (ADR-016) | `core:network`, `core:datastore`, `core:model`, `core:common` | 2 | ✅ Реализован |
+| `:core:designsystem` | Тема/токены «Apex Finance» (light-палитра из design.md + generated dark, Inter + JetBrains Mono variable), компоненты: ApexButton, ApexCard, CoinListItem, CoinIcon, PriceText/ChangeText/ChangeBadge, StatTile, Sparkline, Skeleton, EmptyState, ErrorState, OfflineBanner, ApexSearchBar, SectionHeader | `core:common` | 2 | ✅ Реализован |
+| `:core:navigation` | Type-safe маршруты (`@Serializable`), контракты `NavGraphBuilder.xxxGraph` | `core:model` | 2 | ✅ Реализован |
+| `:feature:market` | Market Home, фильтры (шит), состояния loading/error/empty/offline | designsystem, navigation, model, common, data | 4 | ✅ Реализован |
+| `:feature:coin-details` | Детали коина: график (Vico), таймфреймы, Market Stats, About | те же | 5 | ✅ Реализован |
+| `:feature:favorites` | Favorites + Empty Favorites | те же | 6 | ✅ Реализован |
+| `:feature:search` | Поиск + вход в Settings (иконка в хедере — единственный, ADR-009) | те же | 6 | ✅ Реализован |
+| `:feature:portfolio` | Portfolio Overview (баланс, аллокация, активы) + Empty Portfolio | те же | 7 | ✅ Реализован |
+| `:feature:assetentry` | Add to Portfolio (шит), Edit Asset, Delete Confirmation (диалог) | те же | 8 | ✅ Реализован |
+| `:feature:settings` | Настройки: currency, dark mode, refresh interval, API status, about | те же | 9 | ✅ Реализован |
 
 Сплэш — в `:app` (ADR-010): это навигационная заглушка, не feature.
 
@@ -50,7 +50,7 @@ presentation не трогает Retrofit/Room/DataStore; граф ацикли�
 | `cryptotrack.android.library` | android library, compileSdk/minSdk, kotlin options, test opts | все android-модули кроме app |
 | `cryptotrack.android.compose` | compose compiler plugin, BOM, buildFeatures.compose | UI-модули |
 | `cryptotrack.android.hilt` | hilt + KSP | модули с DI |
-| `cryptotrack.android.room` | room + KSP, schema dir | core:database |
+| `cryptotrack.android.room` | room + KSP, schema dir | `:core:data` (ADR-016) |
 | `cryptotrack.kotlin.jvm` | чистый kotlin-модуль (если появится) | — |
 | `cryptotrack.android.application` | app-модуль: applicationId, signing, buildTypes | :app |
 | `cryptotrack.feature` | library + compose + hilt (для feature:*) | все feature |
