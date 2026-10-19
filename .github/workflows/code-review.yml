@@ -20,12 +20,10 @@ jobs:
 
     steps:
       - name: Run code review
-        shell: powershell
+        shell: powershell -ExecutionPolicy Bypass -Command "& '{0}'"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass -Force
-        
+        run: |  
           $projectDir = "C:\Users\W\Projects\AI Advent Challenge"
 
           # 1. Получаем номер PR
