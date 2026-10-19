@@ -25,6 +25,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |  
           $projectDir = "C:\Users\W\Projects\AI Advent Challenge"
+          $pythonExe = "C:\Users\W\AppData\Local\Programs\Python\Python312\python.exe"
 
           # 1. Получаем номер PR
           $prNumber = "${{ github.event.pull_request.number }}"
@@ -40,7 +41,7 @@ jobs:
           # 2. Запускаем Python code review
           Set-Location $projectDir
 
-          python "code-review\main.py" $prNumber
+          & $pythonExe "code-review\main.py" $prNumber
 
           if ($LASTEXITCODE -ne 0) {
             throw "Code review failed"
