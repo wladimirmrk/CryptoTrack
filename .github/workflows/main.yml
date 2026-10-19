@@ -9,7 +9,7 @@ jobs:
 
     steps:
       - name: Run PowerShell commands
-        shell: pwsh
+        shell: powershell
         run: |
           Write-Host "Hello from self-hosted runner!"
           Write-Host "Hostname:"
