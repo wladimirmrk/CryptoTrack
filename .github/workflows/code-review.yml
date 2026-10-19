@@ -1,0 +1,62 @@
+name: AI Code Review
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+  workflow_dispatch:
+    inputs:
+      pr_number:
+        description: 'Pull Request number'
+        required: true
+        type: string
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  code-review:
+    runs-on: [self-hosted, windows]
+
+    steps:
+      - name: Run code review
+        shell: powershell
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          $projectDir = "C:\Users\W\Projects\AI Advent Challenge"
+
+          # 1. Получаем номер PR
+          $prNumber = "${{ github.event.pull_request.number }}"
+
+          if (-not $prNumber) {
+            $prNumber = "${{ inputs.pr_number }}"
+          }
+
+          if (-not $prNumber) {
+            throw "PR number is not defined"
+          }
+
+          # 2. Запускаем Python code review
+          Set-Location $projectDir
+
+          python "code-review\main.py" $prNumber
+
+          if ($LASTEXITCODE -ne 0) {
+            throw "Code review failed"
+          }
+
+          # 3. Читаем review и публикуем комментарий
+          $reviewFile = Join-Path $projectDir "code-review\review_pr_$prNumber.md"
+
+          if (-not (Test-Path $reviewFile)) {
+            throw "Review file not found: $reviewFile"
+          }
+
+          gh pr comment $prNumber `
+            --repo "${{ github.repository }}" `
+            --body-file "$reviewFile"
+
+          if ($LASTEXITCODE -ne 0) {
+            throw "Failed to publish PR comment"
+          }
